@@ -109,8 +109,8 @@ function AssignmentsPage() {
                   if (!nw.classId || !nw.subjectId || !nw.teacherId) {
                     toast.error("Điền đầy đủ"); return;
                   }
-                  if (assignments.some((a) => a.classId === nw.classId && a.subjectId === nw.subjectId)) {
-                    toast.error("Lớp × môn này đã có phân công"); return;
+                  if (assignments.some((a) => a.classId === nw.classId && a.subjectId === nw.subjectId && a.teacherId === nw.teacherId)) {
+                    toast.error("Giáo viên này đã được phân công môn này cho lớp này"); return;
                   }
                   addAssignment(nw);
                 }}

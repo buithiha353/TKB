@@ -34,7 +34,7 @@ function SubjectsPage() {
             <div className="col-span-4">Tên môn</div>
             <div className="col-span-3">Viết tắt</div>
             <div className="col-span-2">Tiết/tuần</div>
-            <div className="col-span-2">Ghép đôi</div>
+            <div className="col-span-2">2 tiết liền</div>
             <div className="col-span-1"></div>
           </div>
           {subjects.map((s) => (
