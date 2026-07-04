@@ -1,0 +1,36 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main # Kích hoạt workflow khi có code mới được push lên nhánh main
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Sử dụng Node.js 18 (hoặc phiên bản phù hợp với project của bạn)
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci # Dùng npm ci thay cho npm install để build nhanh và chính xác hơn
+
+      - name: 🔨 Build Project
+        run: npm run build # Chạy lệnh build, thư mục tạo ra thường là `dist`
+
+      - name: 📂 Sync files to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/ # Trỏ vào thư mục build của Vite (thường là dist)
+          server-dir: /public_html/ # Trỏ vào thư mục gốc của website trên cPanel
+          # Nếu bạn muốn deploy vào một thư mục con, ví dụ tên miền phụ: /public_html/tkb/
