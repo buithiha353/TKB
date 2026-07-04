@@ -16,14 +16,14 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18 # Sử dụng Node.js 18 (hoặc phiên bản phù hợp với project của bạn)
+          node-version: 18
           cache: 'npm'
 
       - name: 📦 Install dependencies
         run: npm install
 
       - name: 🔨 Build Project
-        run: npm run build # Chạy lệnh build, thư mục tạo ra thường là `dist`
+        run: npm run build
 
       - name: 📂 Sync files to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -31,6 +31,5 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/ # Trỏ vào thư mục build của Vite (thường là dist)
-          server-dir: /public_html/ # Trỏ vào thư mục gốc của website trên cPanel
-          # Nếu bạn muốn deploy vào một thư mục con, ví dụ tên miền phụ: /public_html/tkb/
+          local-dir: ./dist/
+          server-dir: /public_html/
