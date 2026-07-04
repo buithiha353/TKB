@@ -20,7 +20,7 @@ jobs:
           cache: 'npm'
 
       - name: 📦 Install dependencies
-        run: npm ci # Dùng npm ci thay cho npm install để build nhanh và chính xác hơn
+        run: npm install
 
       - name: 🔨 Build Project
         run: npm run build # Chạy lệnh build, thư mục tạo ra thường là `dist`
