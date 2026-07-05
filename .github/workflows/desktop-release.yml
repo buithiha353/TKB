@@ -70,6 +70,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: |
+          $ErrorActionPreference = "Stop"
           $version = "${{ inputs.version }}"
           $notes = @'
           ${{ inputs.notes }}
@@ -83,9 +84,10 @@ jobs:
             throw "Không tìm thấy installer NSIS cho version $version"
           }
 
-          $keyPath = Join-Path $env:RUNNER_TEMP "tauri.key"
-          Set-Content -Path $keyPath -Value $env:TAURI_SIGNING_PRIVATE_KEY -NoNewline -Encoding UTF8
-          npx tauri signer sign --private-key-path $keyPath --password="$env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD" "$($installer.FullName)"
+          npx tauri signer sign --password="$env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD" "$($installer.FullName)"
+          if ($LASTEXITCODE -ne 0) {
+            throw "Không thể ký installer bằng Tauri signer"
+          }
 
           $safeInstallerName = "TKB.THCS_$($version)_x64-setup.exe"
           $safeInstallerPath = Join-Path $releaseDir $safeInstallerName
