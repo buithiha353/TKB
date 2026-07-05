@@ -11,7 +11,10 @@ import {
   Settings as SettingsIcon,
   Users,
   BookOpen,
+  LogOut,
 } from "lucide-react";
+import { useAuthStore } from "@/lib/auth/store";
+import { useRouter } from "@tanstack/react-router";
 
 const nav = [
   { to: "/", label: "Tổng quan", icon: Home },
@@ -26,6 +29,8 @@ const nav = [
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onboarded = useStore((s) => s.onboarded);
+  const logout = useAuthStore((s) => s.logout);
+  const router = useRouter();
   const [wizardOpen, setWizardOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
@@ -80,6 +85,18 @@ export function AppLayout({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
+          <div className="border-t p-3">
+            <button
+              onClick={() => {
+                logout();
+                router.navigate({ to: "/login" });
+              }}
+              className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:hover:bg-red-950/30"
+            >
+              <LogOut className="h-4 w-4" />
+              Đăng xuất
+            </button>
+          </div>
         </aside>
 
         <div className="flex-1 min-w-0">
@@ -88,6 +105,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <Calendar className="h-5 w-5 text-primary" />
               <span className="font-semibold">TKB THCS</span>
             </div>
+            <button
+              onClick={() => {
+                logout();
+                router.navigate({ to: "/login" });
+              }}
+              className="p-1 text-red-500 active:bg-red-50 rounded-md"
+            >
+              <LogOut className="h-5 w-5" />
+            </button>
           </header>
           {/* Mobile bottom nav */}
           <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t bg-card/95 backdrop-blur md:hidden print:hidden">

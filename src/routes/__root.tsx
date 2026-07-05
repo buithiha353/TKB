@@ -6,8 +6,10 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  redirect,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { useAuthStore } from "@/lib/auth/store";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
@@ -70,6 +72,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: ({ location }) => {
+    const isAuth = useAuthStore.getState().isAuthenticated;
+    if (!isAuth && location.pathname !== '/login') {
+      throw redirect({
+        to: '/login',
+      });
+    }
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
