@@ -21,7 +21,17 @@ import {
 import { useStore } from "@/lib/timetable/store";
 import { seedSubjects } from "@/lib/timetable/seed";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Check, Sparkles, School as SchoolIcon, Calendar, Clock, Shield, Database } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Sparkles,
+  School as SchoolIcon,
+  Calendar,
+  Clock,
+  Shield,
+  Database,
+} from "lucide-react";
 import { toast } from "sonner";
 
 interface Draft {
@@ -46,13 +56,7 @@ const STEPS = [
   { key: "data", label: "Dữ liệu", icon: Database },
 ] as const;
 
-export function SetupWizard({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+export function SetupWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const {
     settings,
     setSettings,
@@ -82,8 +86,7 @@ export function SetupWizard({
     if (open) setStep(0);
   }, [open]);
 
-  const update = <K extends keyof Draft>(k: K, v: Draft[K]) =>
-    setDraft((d) => ({ ...d, [k]: v }));
+  const update = <K extends keyof Draft>(k: K, v: Draft[K]) => setDraft((d) => ({ ...d, [k]: v }));
 
   const finish = () => {
     setSettings({
@@ -115,8 +118,8 @@ export function SetupWizard({
       const mainSchoolId = schools[0].id;
       useStore.setState((st) => ({
         schools: [st.schools[0]],
-        classes: st.classes.map(c => ({ ...c, schoolId: mainSchoolId })),
-        teachers: st.teachers.map(t => ({ ...t, schoolIds: [mainSchoolId] }))
+        classes: st.classes.map((c) => ({ ...c, schoolId: mainSchoolId })),
+        teachers: st.teachers.map((t) => ({ ...t, schoolIds: [mainSchoolId] })),
       }));
     }
 
@@ -178,9 +181,7 @@ export function SetupWizard({
                 onChange={(e) => update("schoolName", e.target.value)}
                 placeholder="VD: Trường THCS Nguyễn Trãi"
               />
-              <p className="text-xs text-muted-foreground">
-                Tên này sẽ hiển thị ở đầu bản in TKB.
-              </p>
+              <p className="text-xs text-muted-foreground">Tên này sẽ hiển thị ở đầu bản in TKB.</p>
             </div>
           )}
 
@@ -202,9 +203,7 @@ export function SetupWizard({
                   >
                     <div className="text-lg font-semibold">{n} điểm trường</div>
                     <div className="text-xs text-muted-foreground">
-                      {n === 1
-                        ? "Chỉ 1 cơ sở duy nhất"
-                        : "Có 2 cơ sở, GV có thể di chuyển"}
+                      {n === 1 ? "Chỉ 1 cơ sở duy nhất" : "Có 2 cơ sở, GV có thể di chuyển"}
                     </div>
                   </button>
                 ))}
@@ -246,10 +245,14 @@ export function SetupWizard({
                   value={String(draft.morningPeriods)}
                   onValueChange={(v) => update("morningPeriods", Number(v))}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {[3, 4, 5].map((n) => (
-                      <SelectItem key={n} value={String(n)}>{n} tiết</SelectItem>
+                      <SelectItem key={n} value={String(n)}>
+                        {n} tiết
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -260,7 +263,9 @@ export function SetupWizard({
                   value={String(draft.afternoonPeriods)}
                   onValueChange={(v) => update("afternoonPeriods", Number(v))}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {[0, 2, 3, 4].map((n) => (
                       <SelectItem key={n} value={String(n)}>
@@ -301,11 +306,11 @@ export function SetupWizard({
                 <Label>Tối đa tiết cùng môn / lớp / ngày</Label>
                 <Select
                   value={String(draft.ruleMaxSameSubjectPerDay)}
-                  onValueChange={(v) =>
-                    update("ruleMaxSameSubjectPerDay", Number(v) as 1 | 2)
-                  }
+                  onValueChange={(v) => update("ruleMaxSameSubjectPerDay", Number(v) as 1 | 2)}
                 >
-                  <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1">1 tiết</SelectItem>
                     <SelectItem value="2">2 tiết</SelectItem>
@@ -360,10 +365,7 @@ export function SetupWizard({
             <ChevronLeft className="mr-1 h-4 w-4" /> Quay lại
           </Button>
           {step < STEPS.length - 1 ? (
-            <Button
-              onClick={() => setStep((s) => s + 1)}
-              disabled={!canNext()}
-            >
+            <Button onClick={() => setStep((s) => s + 1)} disabled={!canNext()}>
               Tiếp tục <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
           ) : (

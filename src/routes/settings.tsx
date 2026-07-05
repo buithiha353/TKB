@@ -52,7 +52,9 @@ function SettingsPage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle className="text-base">Thông tin chung</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Thông tin chung</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-3">
             <div>
               <Label>Tên trường</Label>
@@ -65,7 +67,9 @@ function SettingsPage() {
               <div>
                 <Label>Số tiết buổi sáng</Label>
                 <Input
-                  type="number" min={1} max={6}
+                  type="number"
+                  min={1}
+                  max={6}
                   value={settings.morningPeriods === 0 ? "" : settings.morningPeriods}
                   onChange={(e) => setSettings({ morningPeriods: Number(e.target.value) })}
                 />
@@ -73,7 +77,9 @@ function SettingsPage() {
               <div>
                 <Label>Số tiết buổi chiều</Label>
                 <Input
-                  type="number" min={0} max={6}
+                  type="number"
+                  min={0}
+                  max={6}
                   value={settings.afternoonPeriods === 0 ? "" : settings.afternoonPeriods}
                   onChange={(e) => setSettings({ afternoonPeriods: Number(e.target.value) })}
                 />
@@ -83,12 +89,16 @@ function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Quy tắc phân bổ tiết học</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Quy tắc phân bổ tiết học</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label>Ưu tiên xếp kín buổi sáng</Label>
-                <p className="text-xs text-muted-foreground">Xếp đủ số tiết mục tiêu buổi sáng trước khi xếp sang chiều</p>
+                <p className="text-xs text-muted-foreground">
+                  Xếp đủ số tiết mục tiêu buổi sáng trước khi xếp sang chiều
+                </p>
               </div>
               <Switch
                 checked={settings.fillMorningFirst}
@@ -100,7 +110,9 @@ function SettingsPage() {
                 <div>
                   <Label className="text-xs">Số tiết mục tiêu buổi sáng</Label>
                   <Input
-                    type="number" min={1} max={5}
+                    type="number"
+                    min={1}
+                    max={5}
                     value={settings.targetMorningPeriods === 0 ? "" : settings.targetMorningPeriods}
                     onChange={(e) => setSettings({ targetMorningPeriods: Number(e.target.value) })}
                   />
@@ -108,9 +120,15 @@ function SettingsPage() {
                 <div>
                   <Label className="text-xs">Tối đa tiết sáng thứ 2</Label>
                   <Input
-                    type="number" min={1} max={5}
-                    value={settings.maxMondayMorningPeriods === 0 ? "" : settings.maxMondayMorningPeriods}
-                    onChange={(e) => setSettings({ maxMondayMorningPeriods: Number(e.target.value) })}
+                    type="number"
+                    min={1}
+                    max={5}
+                    value={
+                      settings.maxMondayMorningPeriods === 0 ? "" : settings.maxMondayMorningPeriods
+                    }
+                    onChange={(e) =>
+                      setSettings({ maxMondayMorningPeriods: Number(e.target.value) })
+                    }
                   />
                 </div>
               </div>
@@ -119,7 +137,9 @@ function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Sao lưu & Khôi phục</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Sao lưu & Khôi phục</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-muted-foreground">
               Dữ liệu lưu trong trình duyệt của bạn. Xuất ra file JSON để sao lưu hoặc chia sẻ.

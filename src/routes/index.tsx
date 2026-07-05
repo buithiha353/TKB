@@ -12,19 +12,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
-  const {
-    schools,
-    classes,
-    subjects,
-    teachers,
-    assignments,
-    timetable,
-    settings,
-    setTimetable,
-  } = useStore();
+  const { schools, classes, subjects, teachers, assignments, timetable, settings, setTimetable } =
+    useStore();
 
   const totalLessons = Object.keys(timetable).length;
-  const totalNeeded = assignments.reduce((s, a) => s + (a.morningPeriods || 0) + (a.afternoonPeriods || 0), 0);
+  const totalNeeded = assignments.reduce(
+    (s, a) => s + (a.morningPeriods || 0) + (a.afternoonPeriods || 0),
+    0,
+  );
 
   const handleGenerate = () => {
     const t0 = performance.now();
@@ -49,19 +44,37 @@ function Dashboard() {
   };
 
   const stats = [
-    { label: "Điểm trường", value: schools.length, icon: School, color: "bg-blue-500/10 text-blue-600" },
-    { label: "Lớp học", value: classes.length, icon: GraduationCap, color: "bg-emerald-500/10 text-emerald-600" },
-    { label: "Môn học", value: subjects.length, icon: BookOpen, color: "bg-amber-500/10 text-amber-600" },
-    { label: "Giáo viên", value: teachers.length, icon: Users, color: "bg-violet-500/10 text-violet-600" },
+    {
+      label: "Điểm trường",
+      value: schools.length,
+      icon: School,
+      color: "bg-blue-500/10 text-blue-600",
+    },
+    {
+      label: "Lớp học",
+      value: classes.length,
+      icon: GraduationCap,
+      color: "bg-emerald-500/10 text-emerald-600",
+    },
+    {
+      label: "Môn học",
+      value: subjects.length,
+      icon: BookOpen,
+      color: "bg-amber-500/10 text-amber-600",
+    },
+    {
+      label: "Giáo viên",
+      value: teachers.length,
+      icon: Users,
+      color: "bg-violet-500/10 text-violet-600",
+    },
   ];
 
   return (
     <AppLayout>
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">Tổng quan</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {settings.schoolName}
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">{settings.schoolName}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
@@ -88,10 +101,9 @@ function Dashboard() {
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-sm text-muted-foreground">
-              Thuật toán sẽ xếp {totalNeeded} tiết cho {classes.length} lớp theo
-              các ràng buộc: mỗi GV nghỉ 1 buổi sáng/tuần, không di chuyển giữa
-              2 điểm trường trong cùng buổi, không xếp 2 tiết liên tiếp cùng
-              môn (trừ Toán/Văn), ưu tiên điểm trường chính.
+              Thuật toán sẽ xếp {totalNeeded} tiết cho {classes.length} lớp theo các ràng buộc: mỗi
+              GV nghỉ 1 buổi sáng/tuần, không di chuyển giữa 2 điểm trường trong cùng buổi, không
+              xếp 2 tiết liên tiếp cùng môn (trừ Toán/Văn), ưu tiên điểm trường chính.
             </p>
             <div className="flex flex-wrap gap-2">
               <Button onClick={handleGenerate} size="lg">
@@ -145,11 +157,37 @@ function Dashboard() {
             <CardTitle className="text-base">Bắt đầu nhanh</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>1. Kiểm tra <Link to="/schools" className="text-primary underline">điểm trường & lớp học</Link></p>
-            <p>2. Xem <Link to="/subjects" className="text-primary underline">môn học</Link> và số tiết/tuần</p>
-            <p>3. Cập nhật <Link to="/teachers" className="text-primary underline">danh sách giáo viên</Link></p>
-            <p>4. Kiểm tra <Link to="/assignments" className="text-primary underline">phân công dạy</Link></p>
-            <p>5. Bấm "Sinh TKB tự động" và <Link to="/timetable" className="text-primary underline">tinh chỉnh</Link></p>
+            <p>
+              1. Kiểm tra{" "}
+              <Link to="/schools" className="text-primary underline">
+                điểm trường & lớp học
+              </Link>
+            </p>
+            <p>
+              2. Xem{" "}
+              <Link to="/subjects" className="text-primary underline">
+                môn học
+              </Link>{" "}
+              và số tiết/tuần
+            </p>
+            <p>
+              3. Cập nhật{" "}
+              <Link to="/teachers" className="text-primary underline">
+                danh sách giáo viên
+              </Link>
+            </p>
+            <p>
+              4. Kiểm tra{" "}
+              <Link to="/assignments" className="text-primary underline">
+                phân công dạy
+              </Link>
+            </p>
+            <p>
+              5. Bấm "Sinh TKB tự động" và{" "}
+              <Link to="/timetable" className="text-primary underline">
+                tinh chỉnh
+              </Link>
+            </p>
           </CardContent>
         </Card>
 
@@ -158,10 +196,21 @@ function Dashboard() {
             <CardTitle className="text-base">Cấu hình hiện tại</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1 text-sm">
-            <div><span className="text-muted-foreground">Số ngày/tuần:</span> {settings.days}</div>
-            <div><span className="text-muted-foreground">Tiết buổi sáng:</span> {settings.morningPeriods}</div>
-            <div><span className="text-muted-foreground">Tiết buổi chiều:</span> {settings.afternoonPeriods}</div>
-            <div><span className="text-muted-foreground">Tổng slot/tuần:</span> {(settings.morningPeriods + settings.afternoonPeriods) * settings.days}</div>
+            <div>
+              <span className="text-muted-foreground">Số ngày/tuần:</span> {settings.days}
+            </div>
+            <div>
+              <span className="text-muted-foreground">Tiết buổi sáng:</span>{" "}
+              {settings.morningPeriods}
+            </div>
+            <div>
+              <span className="text-muted-foreground">Tiết buổi chiều:</span>{" "}
+              {settings.afternoonPeriods}
+            </div>
+            <div>
+              <span className="text-muted-foreground">Tổng slot/tuần:</span>{" "}
+              {(settings.morningPeriods + settings.afternoonPeriods) * settings.days}
+            </div>
           </CardContent>
         </Card>
       </div>

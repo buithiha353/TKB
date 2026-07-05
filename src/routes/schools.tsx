@@ -117,10 +117,14 @@ function SchoolsPage() {
                   value={String(newClass.grade)}
                   onValueChange={(v) => setNewClass({ ...newClass, grade: Number(v) })}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {[6, 7, 8, 9].map((g) => (
-                      <SelectItem key={g} value={String(g)}>Khối {g}</SelectItem>
+                      <SelectItem key={g} value={String(g)}>
+                        Khối {g}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -131,10 +135,14 @@ function SchoolsPage() {
                   value={newClass.schoolId}
                   onValueChange={(v) => setNewClass({ ...newClass, schoolId: v })}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {schools.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -205,11 +213,7 @@ function SchoolsPage() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeClass(c.id)}
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => removeClass(c.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

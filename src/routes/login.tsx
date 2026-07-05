@@ -2,7 +2,14 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/auth/store";
 import { authenticateWithGoogleSheet } from "@/lib/auth/fetcher";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -19,7 +26,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const login = useAuthStore((s) => s.login);
   const router = useRouter();
 
@@ -58,9 +65,7 @@ function LoginPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">Hệ thống Xếp TKB</CardTitle>
-          <CardDescription>
-            Đăng nhập để quản lý thời khóa biểu THCS
-          </CardDescription>
+          <CardDescription>Đăng nhập để quản lý thời khóa biểu THCS</CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">

@@ -63,10 +63,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </div>
           <nav className="flex-1 space-y-1 p-3">
             {nav.map((item) => {
-              const active =
-                item.to === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.to);
+              const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
                 <Link
@@ -118,10 +115,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           {/* Mobile bottom nav */}
           <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t bg-card/95 backdrop-blur md:hidden print:hidden">
             {nav.slice(0, 6).map((item) => {
-              const active =
-                item.to === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.to);
+              const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
                 <Link
@@ -139,9 +133,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             })}
           </nav>
 
-          <main className="mx-auto max-w-7xl p-4 pb-24 md:p-8 md:pb-8 print:p-0">
-            {children}
-          </main>
+          <main className="mx-auto max-w-7xl p-4 pb-24 md:p-8 md:pb-8 print:p-0">{children}</main>
         </div>
       </div>
     </div>

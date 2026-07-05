@@ -1,0 +1,1 @@
+var e=[`Thứ 2`,`Thứ 3`,`Thứ 4`,`Thứ 5`,`Thứ 6`];function t(e,t,n,r){return`${e}-${t}-${n}-${r}`}export{t as n,e as t};

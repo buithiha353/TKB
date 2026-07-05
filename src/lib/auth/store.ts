@@ -18,6 +18,6 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "tkb-auth", // lưu trong localStorage với tên 'tkb-auth'
-    }
-  )
+    },
+  ),
 );

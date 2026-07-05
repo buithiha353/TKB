@@ -119,7 +119,12 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
     }
 
     // Giới hạn tiết sáng thứ 2
-    if (settings.maxMondayMorningPeriods && slot.day === 1 && slot.session === "AM" && slot.period > settings.maxMondayMorningPeriods) {
+    if (
+      settings.maxMondayMorningPeriods &&
+      slot.day === 1 &&
+      slot.session === "AM" &&
+      slot.period > settings.maxMondayMorningPeriods
+    ) {
       return "bad";
     }
 
@@ -202,7 +207,7 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
     } else {
       prioritizedSlots.sort((a, b) => a.period - b.period);
     }
-    
+
     // pass 1: hard-ok only
     let placed = false;
     const okSlots: Slot[] = [];
@@ -226,7 +231,10 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
     assignmentId: aid,
     remaining: n,
   }));
-  const totalNeeded = assignments.reduce((a, b) => a + (b.morningPeriods || 0) + (b.afternoonPeriods || 0), 0);
+  const totalNeeded = assignments.reduce(
+    (a, b) => a + (b.morningPeriods || 0) + (b.afternoonPeriods || 0),
+    0,
+  );
   const totalPlaced = totalNeeded - unplaced.reduce((s, x) => s + x.remaining, 0);
   return { timetable, unplaced, totalPlaced, totalNeeded };
 }
@@ -256,8 +264,13 @@ export function checkConflict(
   if (!teacher || !cls) return "Dữ liệu không hợp lệ";
   if (target.day === teacher.offDay && (target.session === "AM" || teacher.isOffFullDay))
     return `GV ${teacher.name} nghỉ buổi sáng thứ ${target.day + 1}`;
-    
-  const assignment = ctx.assignments.find((a) => a.classId === target.classId && a.subjectId === lesson.subjectId && a.teacherId === lesson.teacherId);
+
+  const assignment = ctx.assignments.find(
+    (a) =>
+      a.classId === target.classId &&
+      a.subjectId === lesson.subjectId &&
+      a.teacherId === lesson.teacherId,
+  );
   if (assignment) {
     if (target.session === "AM" && (assignment.morningPeriods || 0) === 0) {
       return `Môn này chỉ được học buổi Chiều (theo cấu hình số tiết)`;
@@ -266,14 +279,18 @@ export function checkConflict(
       return `Môn này chỉ được học buổi Sáng (theo cấu hình số tiết)`;
     }
   }
-  
+
   const subject = ctx.subjects.find((s) => s.id === lesson.subjectId);
   if (subject) {
     let countOnDay = 0;
     const sourceK = slotKey(lesson.day, lesson.session, lesson.period, lesson.classId);
     for (const [k, l] of Object.entries(timetable)) {
       if (k === sourceK) continue;
-      if (l.classId === target.classId && l.day === target.day && l.subjectId === lesson.subjectId) {
+      if (
+        l.classId === target.classId &&
+        l.day === target.day &&
+        l.subjectId === lesson.subjectId
+      ) {
         countOnDay++;
       }
     }
@@ -294,8 +311,7 @@ export function checkConflict(
   }
   // teacher elsewhere at same slot
   for (const [k, l] of Object.entries(timetable)) {
-    if (k === slotKey(lesson.day, lesson.session, lesson.period, lesson.classId))
-      continue;
+    if (k === slotKey(lesson.day, lesson.session, lesson.period, lesson.classId)) continue;
     if (
       l.day === target.day &&
       l.session === target.session &&
@@ -306,11 +322,7 @@ export function checkConflict(
   }
   // session location
   for (const [, l] of Object.entries(timetable)) {
-    if (
-      l.day === target.day &&
-      l.session === target.session &&
-      l.teacherId === lesson.teacherId
-    ) {
+    if (l.day === target.day && l.session === target.session && l.teacherId === lesson.teacherId) {
       const otherCls = ctx.classes.find((c) => c.id === l.classId);
       if (otherCls && otherCls.schoolId !== cls.schoolId)
         return `GV đang ở điểm trường khác trong buổi này`;
@@ -330,17 +342,25 @@ export function getAllConflicts(timetable: Timetable, ctx: Ctx): string[] {
 
     // 1. Teacher off day
     if (l.day === teacher.offDay && (l.session === "AM" || teacher.isOffFullDay)) {
-      errors.add(`Lớp ${cls.name}: GV ${teacher.name} đang dạy vào ngày nghỉ (Sáng Thứ ${l.day + 1})`);
+      errors.add(
+        `Lớp ${cls.name}: GV ${teacher.name} đang dạy vào ngày nghỉ (Sáng Thứ ${l.day + 1})`,
+      );
     }
 
     // 2. Sáng/Chiều
-    const assignment = ctx.assignments.find((a) => a.classId === l.classId && a.subjectId === l.subjectId && a.teacherId === l.teacherId);
+    const assignment = ctx.assignments.find(
+      (a) => a.classId === l.classId && a.subjectId === l.subjectId && a.teacherId === l.teacherId,
+    );
     if (assignment) {
       if (l.session === "AM" && (assignment.morningPeriods || 0) === 0) {
-        errors.add(`Lớp ${cls.name}: Môn ${subject.name} bị xếp vào Sáng nhưng cấu hình chỉ có tiết Chiều`);
+        errors.add(
+          `Lớp ${cls.name}: Môn ${subject.name} bị xếp vào Sáng nhưng cấu hình chỉ có tiết Chiều`,
+        );
       }
       if (l.session === "PM" && (assignment.afternoonPeriods || 0) === 0) {
-        errors.add(`Lớp ${cls.name}: Môn ${subject.name} bị xếp vào Chiều nhưng cấu hình chỉ có tiết Sáng`);
+        errors.add(
+          `Lớp ${cls.name}: Môn ${subject.name} bị xếp vào Chiều nhưng cấu hình chỉ có tiết Sáng`,
+        );
       }
     }
 
@@ -353,24 +373,35 @@ export function getAllConflicts(timetable: Timetable, ctx: Ctx): string[] {
     }
     const cap = subject.canDouble ? 2 : 1;
     if (countOnDay > cap) {
-      errors.add(`Lớp ${cls.name}: Môn ${subject.name} đang có ${countOnDay} tiết trong Thứ ${l.day + 1} (vượt mức ${cap})`);
+      errors.add(
+        `Lớp ${cls.name}: Môn ${subject.name} đang có ${countOnDay} tiết trong Thứ ${l.day + 1} (vượt mức ${cap})`,
+      );
     }
 
     // 4. Empty gaps
     if (l.period > 1) {
       const prevK = slotKey(l.day, l.session, l.period - 1, l.classId);
       if (!timetable[prevK]) {
-        errors.add(`Lớp ${cls.name}: Có khoảng trống trước tiết ${l.period} buổi ${l.session === "AM" ? "Sáng" : "Chiều"} Thứ ${l.day + 1}`);
+        errors.add(
+          `Lớp ${cls.name}: Có khoảng trống trước tiết ${l.period} buổi ${l.session === "AM" ? "Sáng" : "Chiều"} Thứ ${l.day + 1}`,
+        );
       }
     }
 
     // 5. Teacher overlapping
     for (const [k2, l2] of Object.entries(timetable)) {
       if (k === k2) continue;
-      if (l2.day === l.day && l2.session === l.session && l2.period === l.period && l2.teacherId === l.teacherId) {
-        const otherCls = ctx.classes.find(c => c.id === l2.classId);
+      if (
+        l2.day === l.day &&
+        l2.session === l.session &&
+        l2.period === l.period &&
+        l2.teacherId === l.teacherId
+      ) {
+        const otherCls = ctx.classes.find((c) => c.id === l2.classId);
         // Tên GV sẽ đứng trước để sort Set cho dễ nhìn
-        errors.add(`Trùng lịch GV ${teacher.name}: dạy cùng lúc lớp ${cls.name} và ${otherCls?.name} (Tiết ${l.period} ${l.session === "AM" ? "Sáng" : "Chiều"} Thứ ${l.day + 1})`);
+        errors.add(
+          `Trùng lịch GV ${teacher.name}: dạy cùng lúc lớp ${cls.name} và ${otherCls?.name} (Tiết ${l.period} ${l.session === "AM" ? "Sáng" : "Chiều"} Thứ ${l.day + 1})`,
+        );
       }
     }
 
@@ -379,7 +410,9 @@ export function getAllConflicts(timetable: Timetable, ctx: Ctx): string[] {
       if (l2.day === l.day && l2.session === l.session && l2.teacherId === l.teacherId) {
         const otherCls = ctx.classes.find((c) => c.id === l2.classId);
         if (otherCls && otherCls.schoolId !== cls.schoolId) {
-          errors.add(`Di chuyển GV ${teacher.name}: phải dạy ở 2 điểm trường khác nhau trong cùng buổi ${l.session === "AM" ? "Sáng" : "Chiều"} Thứ ${l.day + 1}`);
+          errors.add(
+            `Di chuyển GV ${teacher.name}: phải dạy ở 2 điểm trường khác nhau trong cùng buổi ${l.session === "AM" ? "Sáng" : "Chiều"} Thứ ${l.day + 1}`,
+          );
         }
       }
     }

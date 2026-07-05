@@ -10,13 +10,7 @@ import type {
   Teacher,
   Timetable,
 } from "./types";
-import {
-  seedAssignments,
-  seedClasses,
-  seedSchools,
-  seedSubjects,
-  seedTeachers,
-} from "./seed";
+import { seedAssignments, seedClasses, seedSchools, seedSubjects, seedTeachers } from "./seed";
 
 interface State {
   settings: Settings;
@@ -96,8 +90,7 @@ export const useStore = create<State>()(
     (set, get) => ({
       ...initial(),
 
-      setSettings: (s) =>
-        set((st) => ({ settings: { ...st.settings, ...s } })),
+      setSettings: (s) => set((st) => ({ settings: { ...st.settings, ...s } })),
       setOnboarded: (v) => set({ onboarded: v }),
       startFresh: () =>
         set({
@@ -108,17 +101,14 @@ export const useStore = create<State>()(
           timetable: {},
         }),
 
-      addSchool: (s) =>
-        set((st) => ({ schools: [...st.schools, { ...s, id: rid() }] })),
+      addSchool: (s) => set((st) => ({ schools: [...st.schools, { ...s, id: rid() }] })),
       updateSchool: (id, patch) =>
         set((st) => ({
           schools: st.schools.map((x) => (x.id === id ? { ...x, ...patch } : x)),
         })),
-      removeSchool: (id) =>
-        set((st) => ({ schools: st.schools.filter((x) => x.id !== id) })),
+      removeSchool: (id) => set((st) => ({ schools: st.schools.filter((x) => x.id !== id) })),
 
-      addClass: (c) =>
-        set((st) => ({ classes: [...st.classes, { ...c, id: rid() }] })),
+      addClass: (c) => set((st) => ({ classes: [...st.classes, { ...c, id: rid() }] })),
       updateClass: (id, patch) =>
         set((st) => ({
           classes: st.classes.map((x) => (x.id === id ? { ...x, ...patch } : x)),
@@ -129,13 +119,10 @@ export const useStore = create<State>()(
           assignments: st.assignments.filter((a) => a.classId !== id),
         })),
 
-      addSubject: (s) =>
-        set((st) => ({ subjects: [...st.subjects, { ...s, id: rid() }] })),
+      addSubject: (s) => set((st) => ({ subjects: [...st.subjects, { ...s, id: rid() }] })),
       updateSubject: (id, patch) =>
         set((st) => ({
-          subjects: st.subjects.map((x) =>
-            x.id === id ? { ...x, ...patch } : x,
-          ),
+          subjects: st.subjects.map((x) => (x.id === id ? { ...x, ...patch } : x)),
         })),
       removeSubject: (id) =>
         set((st) => ({
@@ -143,13 +130,10 @@ export const useStore = create<State>()(
           assignments: st.assignments.filter((a) => a.subjectId !== id),
         })),
 
-      addTeacher: (t) =>
-        set((st) => ({ teachers: [...st.teachers, { ...t, id: rid() }] })),
+      addTeacher: (t) => set((st) => ({ teachers: [...st.teachers, { ...t, id: rid() }] })),
       updateTeacher: (id, patch) =>
         set((st) => ({
-          teachers: st.teachers.map((x) =>
-            x.id === id ? { ...x, ...patch } : x,
-          ),
+          teachers: st.teachers.map((x) => (x.id === id ? { ...x, ...patch } : x)),
         })),
       removeTeacher: (id) =>
         set((st) => ({
@@ -161,13 +145,17 @@ export const useStore = create<State>()(
           const teacher = st.teachers.find((t) => t.id === teacherId);
           if (!teacher) return st;
           // Lấy danh sách classId hiện tại của giáo viên này
-          const currentClassIds = Array.from(new Set(st.assignments.filter((a) => a.teacherId === teacherId).map((a) => a.classId)));
-          
+          const currentClassIds = Array.from(
+            new Set(st.assignments.filter((a) => a.teacherId === teacherId).map((a) => a.classId)),
+          );
+
           const toRemove = currentClassIds.filter((cid) => !classIds.includes(cid));
           const toAdd = classIds.filter((cid) => !currentClassIds.includes(cid));
-          
-          let nextAss = st.assignments.filter((a) => !(a.teacherId === teacherId && toRemove.includes(a.classId)));
-          
+
+          let nextAss = st.assignments.filter(
+            (a) => !(a.teacherId === teacherId && toRemove.includes(a.classId)),
+          );
+
           for (const cid of toAdd) {
             for (const sid of teacher.subjectIds) {
               const sub = st.subjects.find((s) => s.id === sid);
@@ -192,9 +180,7 @@ export const useStore = create<State>()(
         })),
       updateAssignment: (id, patch) =>
         set((st) => ({
-          assignments: st.assignments.map((x) =>
-            x.id === id ? { ...x, ...patch } : x,
-          ),
+          assignments: st.assignments.map((x) => (x.id === id ? { ...x, ...patch } : x)),
         })),
       removeAssignment: (id) =>
         set((st) => ({
@@ -231,8 +217,8 @@ export const useStore = create<State>()(
       },
       resetAll: () => set(initial()),
     }),
-    { 
-      name: "tkb-thcs-v1", 
+    {
+      name: "tkb-thcs-v1",
       version: 3,
       migrate: (persistedState: any, version: number) => {
         if (version < 3 && persistedState.assignments) {
@@ -246,7 +232,7 @@ export const useStore = create<State>()(
           });
         }
         return persistedState;
-      }
+      },
     },
   ),
 );

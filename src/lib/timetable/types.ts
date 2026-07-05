@@ -69,11 +69,6 @@ export type Timetable = Record<string, Lesson>;
 
 export const DAY_NAMES = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6"];
 
-export function slotKey(
-  day: number,
-  session: Session,
-  period: number,
-  classId: ID,
-) {
+export function slotKey(day: number, session: Session, period: number, classId: ID) {
   return `${day}-${session}-${period}-${classId}`;
 }

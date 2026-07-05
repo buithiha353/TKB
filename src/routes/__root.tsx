@@ -74,9 +74,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   beforeLoad: ({ location }) => {
     const isAuth = useAuthStore.getState().isAuthenticated;
-    if (!isAuth && location.pathname !== '/login') {
+    if (!isAuth && location.pathname !== "/login") {
       throw redirect({
-        to: '/login',
+        to: "/login",
       });
     }
   },
@@ -93,8 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "TKB THCS – Xếp thời khóa biểu" },
       {
         property: "og:description",
-        content:
-          "Quản lý điểm trường, lớp, giáo viên, môn học và tự động xếp thời khóa biểu THCS.",
+        content: "Quản lý điểm trường, lớp, giáo viên, môn học và tự động xếp thời khóa biểu THCS.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

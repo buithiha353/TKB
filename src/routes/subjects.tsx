@@ -86,7 +86,10 @@ function SubjectsPage() {
           </div>
           <div>
             <Label>Viết tắt</Label>
-            <Input value={nw.shortName} onChange={(e) => setNw({ ...nw, shortName: e.target.value })} />
+            <Input
+              value={nw.shortName}
+              onChange={(e) => setNw({ ...nw, shortName: e.target.value })}
+            />
           </div>
           <div>
             <Label>Tiết/tuần</Label>
@@ -100,8 +103,15 @@ function SubjectsPage() {
             <Button
               className="w-full"
               onClick={() => {
-                if (!nw.name.trim()) { toast.error("Nhập tên môn"); return; }
-                addSubject({ ...nw, name: nw.name.trim(), shortName: nw.shortName.trim() || nw.name.trim() });
+                if (!nw.name.trim()) {
+                  toast.error("Nhập tên môn");
+                  return;
+                }
+                addSubject({
+                  ...nw,
+                  name: nw.name.trim(),
+                  shortName: nw.shortName.trim() || nw.name.trim(),
+                });
                 setNw({ name: "", shortName: "", defaultPeriods: 2, canDouble: false });
               }}
             >
