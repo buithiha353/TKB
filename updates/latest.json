@@ -1,11 +1,11 @@
 {
-  "version": "0.2.0",
-  "notes": "Bản desktop chuẩn hoá updater qua GitHub Actions, dùng manifest jsDelivr và GitHub Releases.",
-  "pub_date": "2026-07-05T08:56:59Z",
+  "version": "0.3.0",
+  "notes": "Bản desktop dùng endpoint raw GitHub cho manifest cập nhật, tránh cache CDN.",
+  "pub_date": "2026-07-05T09:03:03Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRKy9PTmNTOGo0c2kzZ3BQMWZvV3hOOE1VVWlNdXYxd0k0eU9NS21zRlB2YzMwb0llRWhFQXJkakFaWW5jQUdGNVU0SzFuZHJRcVVTQnoraWhaOFJsYWEvMmNxUGdBTkFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzMjQxODE4CWZpbGU6VEtCIFRIQ1NfMC4yLjBfeDY0LXNldHVwLmV4ZQpCNitGeDc1eUdsS0FQNVBra0Y3azVsZ0E3TTJ4Q1pHaVhyMkRvTHdGMHJOZjlBZlRFVkRYeVJRVE5PWFdXbzJQUEw3Ris5bmpoelNROW50OThYQmhEZz09Cg==",
-      "url": "https://github.com/buithiha353/TKB/releases/download/v0.2.0/TKB.THCS_0.2.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRKy9PTmNTOGo0c3Z6WnhTTU1ydVlybEt0dTcxaWhrWGFOWmVGQkp5ZDZtRHhMM2dseUVsYm9tZkR3Y2lpVnpTNWI3UlgyMGtwYnQwbDJ3TzV1SklMeDAwakFMTzZlblF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzMjQyMTgzCWZpbGU6VEtCIFRIQ1NfMC4zLjBfeDY0LXNldHVwLmV4ZQpqZzIrR1JvQnlHT2NpeGl6cVAwM2xKS2pzcnNlU3ZkZzJEb1NXT0F6UmlIUzJkaVVpdmFOdmU0WDRpNkJuRWc4TWFHNnBpeUVLcWtnejNhVkRYdWxEdz09Cg==",
+      "url": "https://github.com/buithiha353/TKB/releases/download/v0.3.0/TKB.THCS_0.3.0_x64-setup.exe"
     }
   }
 }
