@@ -1,68 +1,37 @@
-# Hệ Thống Quản Lý và Xếp Thời Khóa Biểu THCS (TKB THCS)
+# Hệ thống Xếp Thời Khoá Biểu THCS
 
-Ứng dụng web chuyên dụng giúp các trường Trung học cơ sở quản lý thông tin nhà trường, phân công chuyên môn và tự động xếp thời khóa biểu (TKB) dựa trên các ràng buộc thực tế.
+Hệ thống hỗ trợ xếp thời khoá biểu cho cấp THCS, được thiết kế chuyên biệt để đáp ứng các yêu cầu phức tạp về phân công giảng dạy, giáo viên chạy show giữa các điểm trường, cũng như các giới hạn về tiết học trong tuần.
 
-## 🌟 Tính Năng Nổi Bật
+## Tính năng nổi bật
 
-- **Quản lý danh mục cốt lõi**: Điểm trường, Lớp học, Môn học, Giáo viên.
-- **Phân công chuyên môn**: Dễ dàng phân công giáo viên giảng dạy các môn cho từng lớp.
-- **Sinh TKB Tự Động**: Thuật toán thông minh tự động xếp TKB thỏa mãn các ràng buộc khắt khe:
-  - Giáo viên được nghỉ ít nhất 1 buổi sáng hoặc chiều trong tuần.
-  - Không xếp giáo viên dạy ở 2 điểm trường khác nhau trong cùng một buổi.
-  - Không xếp 2 tiết cùng một môn học liên tiếp nhau (ngoại trừ môn Toán và Ngữ Văn).
-- **Trình chỉnh sửa TKB Trực Quan (Kéo-Thả)**: Sau khi sinh TKB, người dùng có thể tinh chỉnh lại bằng thao tác kéo-thả (Drag & Drop). Hệ thống sẽ tự động kiểm tra và cảnh báo nếu có xung đột (Conflict Checking).
-- **Chế độ xem linh hoạt**: Xem TKB theo từng Lớp học hoặc theo từng Giáo viên.
-- **Hỗ trợ in ấn**: Giao diện được tối ưu hóa cho việc in thời khóa biểu trực tiếp từ trình duyệt.
+- **Quản lý toàn diện**: Dễ dàng thêm, sửa, xoá Điểm trường, Lớp học, Môn học (và số tiết chuẩn), cùng với thông tin Giáo viên.
+- **Phân công chuyên môn**: Bảng phân công tiết dạy thông minh, cho phép đối chiếu số tiết đã phân công với số tiết chuẩn (hiển thị cảnh báo đỏ nếu bị lệch).
+- **Trình tạo Thời khoá biểu (Tự động & Kéo thả)**: 
+  - Khả năng **tự động xếp TKB** dựa trên các ràng buộc cơ bản.
+  - Chức năng **Kéo & Thả (Drag & Drop)** trực quan để sắp xếp thủ công.
+  - **Cảnh báo xung đột (Conflicts)**: Hệ thống theo dõi liên tục toàn bộ TKB và đưa ra danh sách cảnh báo tĩnh trên màn hình nếu có môn học vi phạm quy tắc (VD: xếp quá số tiết/ngày, trùng lịch giáo viên, giáo viên dạy ở ngày đã báo nghỉ...).
+- **Đăng nhập nội bộ**: Mọi truy cập vào hệ thống đều được bảo vệ bởi tính năng Đăng nhập. Hệ thống đối chiếu dữ liệu tài khoản và mật khẩu trực tiếp từ danh sách trên Google Sheets (CSV). Trạng thái đăng nhập được lưu trữ, không cần đăng nhập lại khi F5.
 
-## 💻 Công Nghệ Sử Dụng (Tech Stack)
+## Cài đặt & Khởi chạy (Dành cho Lập trình viên)
 
-Dự án được xây dựng trên nền tảng các công nghệ web hiện đại, tối ưu hiệu suất và trải nghiệm người dùng:
+Dự án được xây dựng trên bộ công nghệ **TanStack Start (Vite)**, **React**, **Zustand** và **TailwindCSS**.
 
-- **Frontend Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Routing**: [TanStack Router](https://tanstack.com/router/latest)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) (Lưu trữ trạng thái toàn cục gọn nhẹ)
-- **Styling & UI Components**: 
-  - [Tailwind CSS v4](https://tailwindcss.com/)
-  - [Shadcn UI](https://ui.shadcn.com/) (Dựa trên Radix UI)
-  - [Lucide React](https://lucide.dev/) (Biểu tượng)
-- **Tính năng Kéo thả (Drag & Drop)**: [@dnd-kit/core](https://dndkit.com/)
+```bash
+# 1. Cài đặt các gói phụ thuộc
+npm install
 
-## 🚀 Hướng Dẫn Cài Đặt và Chạy Chạy Nội Bộ (Local Development)
+# 2. Khởi chạy máy chủ phát triển cục bộ
+npm run dev
 
-### Yêu cầu hệ thống
-- Node.js (phiên bản 18+ trở lên)
-- npm hoặc bun / yarn / pnpm
+# 3. Biên dịch ứng dụng cho môi trường Production (Sử dụng Nitro)
+npm run build
+```
 
-### Các bước cài đặt
+*Lưu ý: Mọi thiết lập liên quan đến hệ thống quản trị bằng bot Lovable đã được gỡ bỏ hoàn toàn, kho lưu trữ này hoạt động hoàn toàn độc lập và có thể triển khai lên bất kỳ nền tảng Hosting / Server tuỳ chỉnh nào.*
 
-1. **Clone repository**:
-   ```bash
-   git clone https://github.com/buithiha353/TKB.git
-   cd TKB
-   ```
+## Bảo mật & Quyền truy cập
+- Dữ liệu đăng nhập (Tài khoản & Mật khẩu) được kiểm tra trực tiếp từ cấu hình Google Sheets.
+- File JSON cấu hình tài khoản cần được tuân thủ định dạng CSV cơ bản để hệ thống đọc hiểu tự động.
 
-2. **Cài đặt các gói phụ thuộc (dependencies)**:
-   ```bash
-   npm install
-   ```
-
-3. **Chạy server phát triển (Development Server)**:
-   ```bash
-   npm run dev
-   ```
-   Sau khi chạy lệnh trên, hãy mở trình duyệt và truy cập vào `http://localhost:5173`.
-
-4. **Build cho môi trường Production**:
-   ```bash
-   npm run build
-   ```
-
-## 📝 Cấu trúc thư mục chính
-
-- `src/components/`: Chứa các component dùng chung (gồm cả Shadcn UI).
-- `src/routes/`: Các trang (pages) của ứng dụng theo kiến trúc TanStack Router.
-- `src/lib/timetable/`: Chứa logic cốt lõi về thuật toán xếp lịch (`scheduler.ts`) và quản lý state (`store.ts`).
-
----
-*Dự án được khởi tạo và phát triển nhằm mục đích số hóa và tự động hóa công tác xếp TKB tại các trường THCS.*
+## Bản quyền
+Phát triển dành riêng cho nghiệp vụ quản lý giáo dục trường THCS.
