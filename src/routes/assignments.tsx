@@ -33,9 +33,10 @@ function AssignmentsPage() {
     removeAssignment,
   } = useStore();
 
-  const [filterClass, setFilterClass] = useState<string>("all");
+  const initialClassId = classes[0]?.id || "";
+  const [filterClass, setFilterClass] = useState<string>(initialClassId || "all");
   const [nw, setNw] = useState({
-    classId: classes[0]?.id || "",
+    classId: initialClassId,
     subjectId: subjects[0]?.id || "",
     teacherId: teachers[0]?.id || "",
     periods: 2,
@@ -62,7 +63,7 @@ function AssignmentsPage() {
         <CardContent className="grid gap-3 md:grid-cols-5">
           <div>
             <Label>Lớp</Label>
-            <Select value={nw.classId} onValueChange={(v) => setNw({ ...nw, classId: v })}>
+            <Select value={nw.classId} onValueChange={(v) => { setNw({ ...nw, classId: v }); setFilterClass(v); }}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 {classes.map((c) => (
@@ -124,7 +125,7 @@ function AssignmentsPage() {
 
       <div className="mb-3 flex items-center gap-3">
         <Label className="text-sm">Lọc theo lớp:</Label>
-        <Select value={filterClass} onValueChange={setFilterClass}>
+        <Select value={filterClass} onValueChange={(v) => { setFilterClass(v); if (v !== "all") setNw({ ...nw, classId: v }); }}>
           <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
