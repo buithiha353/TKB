@@ -101,7 +101,7 @@ function AssignmentsPage() {
               <Input
                 type="number"
                 min={0}
-                value={nw.periods}
+                value={nw.periods === 0 ? "" : nw.periods}
                 onChange={(e) => setNw({ ...nw, periods: Number(e.target.value) })}
               />
               <Button
@@ -175,7 +175,7 @@ function AssignmentsPage() {
                     type="number"
                     min={0}
                     className="h-8"
-                    value={a.periods}
+                    value={a.periods === 0 ? "" : a.periods}
                     onChange={(e) => updateAssignment(a.id, { periods: Number(e.target.value) })}
                   />
                 </div>

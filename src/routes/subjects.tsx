@@ -54,7 +54,7 @@ function SubjectsPage() {
                 type="number"
                 min={0}
                 max={10}
-                value={s.defaultPeriods}
+                value={s.defaultPeriods === 0 ? "" : s.defaultPeriods}
                 onChange={(e) =>
                   updateSubject(s.id, { defaultPeriods: Math.max(0, Number(e.target.value)) })
                 }
@@ -92,7 +92,7 @@ function SubjectsPage() {
             <Label>Tiết/tuần</Label>
             <Input
               type="number"
-              value={nw.defaultPeriods}
+              value={nw.defaultPeriods === 0 ? "" : nw.defaultPeriods}
               onChange={(e) => setNw({ ...nw, defaultPeriods: Number(e.target.value) })}
             />
           </div>

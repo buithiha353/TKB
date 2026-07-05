@@ -65,7 +65,7 @@ function SettingsPage() {
                 <Label>Số tiết buổi sáng</Label>
                 <Input
                   type="number" min={1} max={6}
-                  value={settings.morningPeriods}
+                  value={settings.morningPeriods === 0 ? "" : settings.morningPeriods}
                   onChange={(e) => setSettings({ morningPeriods: Number(e.target.value) })}
                 />
               </div>
@@ -73,7 +73,7 @@ function SettingsPage() {
                 <Label>Số tiết buổi chiều</Label>
                 <Input
                   type="number" min={0} max={6}
-                  value={settings.afternoonPeriods}
+                  value={settings.afternoonPeriods === 0 ? "" : settings.afternoonPeriods}
                   onChange={(e) => setSettings({ afternoonPeriods: Number(e.target.value) })}
                 />
               </div>
