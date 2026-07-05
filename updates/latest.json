@@ -1,11 +1,11 @@
 {
-  "version": "0.3.0",
-  "notes": "Bản desktop dùng endpoint raw GitHub cho manifest cập nhật, tránh cache CDN.",
-  "pub_date": "2026-07-05T09:03:03Z",
+  "version": "0.3.1",
+  "notes": "Sua loi ban Windows mo kem cua so console den.",
+  "pub_date": "2026-07-05T09:19:55Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRKy9PTmNTOGo0c3Z6WnhTTU1ydVlybEt0dTcxaWhrWGFOWmVGQkp5ZDZtRHhMM2dseUVsYm9tZkR3Y2lpVnpTNWI3UlgyMGtwYnQwbDJ3TzV1SklMeDAwakFMTzZlblF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzMjQyMTgzCWZpbGU6VEtCIFRIQ1NfMC4zLjBfeDY0LXNldHVwLmV4ZQpqZzIrR1JvQnlHT2NpeGl6cVAwM2xKS2pzcnNlU3ZkZzJEb1NXT0F6UmlIUzJkaVVpdmFOdmU0WDRpNkJuRWc4TWFHNnBpeUVLcWtnejNhVkRYdWxEdz09Cg==",
-      "url": "https://github.com/buithiha353/TKB/releases/download/v0.3.0/TKB.THCS_0.3.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRKy9PTmNTOGo0c3ZFekFSdk9RZTRLeUhRQXdlUmlSUU1pNnRyK2IxUm14eEpTZ2swL1VOVXhYNGhEc2hnUGtIMm5IQWVoc1pwS3FWYXlid21hK3F1dTdwKzNJb2REQ2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzMjQzMTk1CWZpbGU6VEtCIFRIQ1NfMC4zLjFfeDY0LXNldHVwLmV4ZQp5T2NmcGNrOVBneVBSdWxTU0xWdXY2ODcvb0NCcXQ1OWNRR05VWiswRXJsbDVoTWxwZGM1bXRPK1pVUEFZaUpYTEN0UXJyNkhaNHpLODJhcWtQOVpBUT09Cg==",
+      "url": "https://github.com/buithiha353/TKB/releases/download/v0.3.1/TKB.THCS_0.3.1_x64-setup.exe"
     }
   }
 }
