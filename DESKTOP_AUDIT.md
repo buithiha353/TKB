@@ -8,6 +8,7 @@
 - Build web/Vercel đã chạy được mà không cần wrapper Vite bên thứ ba cũ.
 - Không còn chuỗi branding nền tảng cũ trong working tree, ngoài các thư mục ignored/generated.
 - Tự động cập nhật đã trỏ về repo GitHub `buithiha353/TKB` qua `updates/latest.json`.
+- Đã thêm workflow GitHub Actions `Desktop Release` để build, ký, cập nhật manifest và tạo GitHub Release tự động.
 - Artifact build thành công trước khi thêm updater vẫn còn: `tkb-thcs.exe` khoảng 11.5 MB và installer NSIS khoảng 2.5 MB.
 
 ## Đã Xác Minh
@@ -33,7 +34,7 @@ An Application Control policy has blocked this file. (os error 4551)
 
 ## Cần Làm Trước Khi Phát Hành
 
-1. Build installer trên máy hoặc CI runner cho phép Cargo chạy build script.
+1. Chạy workflow `Desktop Release` trên GitHub để build installer bằng CI.
 2. Giữ kín `.tauri/tkb-thcs.key`; key này bắt buộc để ký các gói cập nhật sau này.
 3. Tăng version release trong `src-tauri/tauri.conf.json` và `src-tauri/Cargo.toml`.
 4. Upload installer và file `.sig` lên GitHub Releases của `buithiha353/TKB`.

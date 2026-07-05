@@ -1,0 +1,135 @@
+name: Desktop Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version mới, ví dụ 0.2.0"
+        required: true
+        type: string
+      notes:
+        description: "Ghi chú phát hành"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Build và phát hành Windows desktop
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Cài Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Cài Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+
+      - name: Cài dependencies
+        run: npm ci
+
+      - name: Cập nhật version desktop
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.version }}"
+
+          $configPath = "src-tauri/tauri.conf.json"
+          $config = Get-Content $configPath -Raw | ConvertFrom-Json
+          $config.version = $version
+          $config | ConvertTo-Json -Depth 20 | Set-Content $configPath -Encoding UTF8
+
+          $cargoPath = "src-tauri/Cargo.toml"
+          $cargo = Get-Content $cargoPath -Raw
+          $cargo = $cargo -replace '(?m)^version = ".+"', "version = `"$version`""
+          Set-Content $cargoPath $cargo -Encoding UTF8
+
+      - name: Build desktop
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npm run desktop:build
+
+      - name: Ký updater và tạo manifest
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          $version = "${{ inputs.version }}"
+          $notes = @'
+          ${{ inputs.notes }}
+          '@.Trim()
+          $tag = "v$version"
+          $releaseDir = "release"
+          New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
+
+          $installer = Get-ChildItem "src-tauri/target/release/bundle/nsis" -Filter "*_$($version)_x64-setup.exe" | Select-Object -First 1
+          if (-not $installer) {
+            throw "Không tìm thấy installer NSIS cho version $version"
+          }
+
+          $keyPath = Join-Path $env:RUNNER_TEMP "tauri.key"
+          Set-Content -Path $keyPath -Value $env:TAURI_SIGNING_PRIVATE_KEY -NoNewline -Encoding UTF8
+          npx tauri signer sign --private-key-path $keyPath --password="$env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD" "$($installer.FullName)"
+
+          $safeInstallerName = "TKB.THCS_$($version)_x64-setup.exe"
+          $safeInstallerPath = Join-Path $releaseDir $safeInstallerName
+          $safeSignaturePath = "$safeInstallerPath.sig"
+          Copy-Item $installer.FullName $safeInstallerPath -Force
+          Copy-Item "$($installer.FullName).sig" $safeSignaturePath -Force
+
+          $signature = (Get-Content $safeSignaturePath -Raw).Trim()
+          $url = "https://github.com/${{ github.repository }}/releases/download/$tag/$safeInstallerName"
+          $publishedAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+
+          $manifest = [ordered]@{
+            version = $version
+            notes = $notes
+            pub_date = $publishedAt
+            platforms = [ordered]@{
+              "windows-x86_64" = [ordered]@{
+                signature = $signature
+                url = $url
+              }
+            }
+          }
+
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content "updates/latest.json" -Encoding UTF8
+
+      - name: Commit version và manifest
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src-tauri/tauri.conf.json src-tauri/Cargo.toml updates/latest.json
+          git commit -m "release: desktop v$version"
+          git tag -a "v$version" -m "TKB THCS desktop v$version"
+          git push origin main
+          git push origin "v$version"
+
+      - name: Tạo GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = "${{ inputs.version }}"
+          $notes = @'
+          ${{ inputs.notes }}
+          '@.Trim()
+          gh release create "v$version" release/* --title "TKB THCS Desktop v$version" --notes "$notes"

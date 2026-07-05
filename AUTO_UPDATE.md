@@ -40,7 +40,33 @@ File `updates/latest.json` hiện là khung cho version `0.1.0`. Khi có release
 
 Giá trị `signature` phải là nội dung của file `.sig`, không phải URL tới file `.sig`.
 
-## Quy Trình Phát Hành Bản Mới
+## Quy Trình Phát Hành Bản Mới Bằng GitHub Actions
+
+Workflow `.github/workflows/desktop-release.yml` cho phép phát hành bản desktop mới ngay trên GitHub.
+
+Vào GitHub repo:
+
+```text
+Actions -> Desktop Release -> Run workflow
+```
+
+Nhập:
+
+- `version`: ví dụ `0.2.0`
+- `notes`: ghi chú phát hành
+
+Workflow sẽ tự:
+
+1. Cập nhật version trong `src-tauri/tauri.conf.json`.
+2. Cập nhật version trong `src-tauri/Cargo.toml`.
+3. Build installer Windows.
+4. Ký updater bằng `TAURI_SIGNING_PRIVATE_KEY`.
+5. Cập nhật `updates/latest.json`.
+6. Commit lên `main`.
+7. Tạo tag `vX.Y.Z`.
+8. Tạo GitHub Release và upload `.exe` + `.sig`.
+
+## Quy Trình Thủ Công Nếu Không Dùng Actions
 
 1. Tăng version trong `src-tauri/tauri.conf.json`.
 2. Tăng version trong `src-tauri/Cargo.toml`.
