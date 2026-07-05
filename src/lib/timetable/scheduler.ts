@@ -52,7 +52,7 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export function generateSchedule(ctx: Ctx): ScheduleResult {
+function generateScheduleSingle(ctx: Ctx): ScheduleResult {
   const { settings, assignments, subjects, teachers, classes } = ctx;
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
   const teacherMap = new Map(teachers.map((t) => [t.id, t]));
@@ -196,6 +196,19 @@ export function generateSchedule(ctx: Ctx): ScheduleResult {
   const totalNeeded = requests.length;
   const totalPlaced = totalNeeded - unplaced.reduce((s, x) => s + x.remaining, 0);
   return { timetable, unplaced, totalPlaced, totalNeeded };
+}
+
+export function generateSchedule(ctx: Ctx, iterations = 50): ScheduleResult {
+  let best: ScheduleResult | null = null;
+  for (let i = 0; i < iterations; i++) {
+    const res = generateScheduleSingle(ctx);
+    if (!best || res.totalPlaced > best.totalPlaced) {
+      best = res;
+    }
+    // Nếu xếp được 100% thì dừng sớm luôn cho nhanh
+    if (best.totalPlaced === best.totalNeeded) break;
+  }
+  return best!;
 }
 
 // Kiểm tra xung đột khi chỉnh tay (dời 1 lesson tới slot mới hoặc hoán đổi)
