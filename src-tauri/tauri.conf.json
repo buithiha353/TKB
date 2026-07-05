@@ -33,7 +33,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEIyRjhDODRCNUNFM0ZDM0UKUldRKy9PTmNTOGo0c2hyWklvL1A5QURLVGpRRGdTZTB4Y0V1eTlpdU1oSmFOd3kxYjBXUTFOUm8K",
-      "endpoints": ["https://raw.githubusercontent.com/buithiha353/TKB/main/updates/latest.json"]
+      "endpoints": ["https://cdn.jsdelivr.net/gh/buithiha353/TKB@main/updates/latest.json"]
     }
   }
 }
