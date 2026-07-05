@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@/lib/timetable/store";
-import { DAY_NAMES } from "@/lib/timetable/types";
+import { DAY_NAMES, slotKey } from "@/lib/timetable/types";
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Printer } from "lucide-react";
@@ -106,7 +106,7 @@ function PrintAllPage() {
 
                     {/* Render cells for each class */}
                     {group.map((c) => {
-                      const lesson = timetable[c.id]?.[d]?.[p.session]?.[p.period];
+                      const lesson = timetable[slotKey(d + 1, p.session, p.period, c.id)];
                       const sub = lesson ? subjectMap.get(lesson.subjectId) : null;
                       const teacher = lesson ? teacherMap.get(lesson.teacherId) : null;
 

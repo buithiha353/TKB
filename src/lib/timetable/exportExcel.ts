@@ -1,6 +1,6 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { DAY_NAMES, Session, SchoolClass, Subject, Teacher, Timetable, School, Settings } from "./types";
+import { DAY_NAMES, Session, SchoolClass, Subject, Teacher, Timetable, School, Settings, slotKey } from "./types";
 
 export async function exportTimetableToExcel({
   schools,
@@ -136,7 +136,7 @@ export async function exportTimetableToExcel({
 
       // Fill Classes Group 1
       group1.forEach((c, i) => {
-        const lesson = timetable[c.id]?.[d]?.[periodDef.session]?.[periodDef.period];
+        const lesson = timetable[slotKey(d + 1, periodDef.session, periodDef.period, c.id)];
         const cell = row.getCell(4 + i);
         if (lesson) {
           const sub = subjectMap.get(lesson.subjectId);
@@ -171,7 +171,7 @@ export async function exportTimetableToExcel({
 
       // Fill Classes Group 2
       group2.forEach((c, i) => {
-        const lesson = timetable[c.id]?.[d]?.[periodDef.session]?.[periodDef.period];
+        const lesson = timetable[slotKey(d + 1, periodDef.session, periodDef.period, c.id)];
         const cell = row.getCell(colGroup2Start + 3 + i);
         if (lesson) {
           const sub = subjectMap.get(lesson.subjectId);
