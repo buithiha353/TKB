@@ -72,14 +72,6 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  beforeLoad: ({ location }) => {
-    const isAuth = useAuthStore.getState().isAuthenticated;
-    if (!isAuth && location.pathname !== "/login" && location.pathname !== "/print-all") {
-      throw redirect({
-        to: "/login",
-      });
-    }
-  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

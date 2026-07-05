@@ -113,6 +113,7 @@ export async function exportTimetableToExcel({
       const periodDef = periodsList[pIdx];
       const isPM = periodDef.session === "PM";
       const pmFill: ExcelJS.Fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE2EFDA" } };
+      const branch2Fill: ExcelJS.Fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFF2CC" } };
 
       // Fill Group 1 (Grade 6,7)
       if (pIdx === 0) { // start of day
@@ -148,6 +149,7 @@ export async function exportTimetableToExcel({
           cell.value = `${sub?.shortName || ""} - ${teacher?.name || ""}`;
         }
         cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        if (c.schoolId === branch2Id) cell.fill = branch2Fill;
         if (isPM) cell.fill = pmFill;
       });
 
@@ -186,6 +188,7 @@ export async function exportTimetableToExcel({
           cell.value = `${sub?.shortName || ""} - ${teacher?.name || ""}`;
         }
         cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        if (c.schoolId === branch2Id) cell.fill = branch2Fill;
         if (isPM) cell.fill = pmFill;
       });
 
@@ -218,30 +221,7 @@ export async function exportTimetableToExcel({
     }
   }
 
-  // 3. Highlight Branch 2
-  if (branch2Id) {
-    const branch2Fill: ExcelJS.Fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "FFFFF2CC" }, // Light yellow
-    };
-
-    group1.forEach((c, i) => {
-      if (c.schoolId === branch2Id) {
-        for (let r = 4; r < currentRowIdx; r++) {
-          ws.getCell(r, 4 + i).fill = branch2Fill;
-        }
-      }
-    });
-
-    group2.forEach((c, i) => {
-      if (c.schoolId === branch2Id) {
-        for (let r = 4; r < currentRowIdx; r++) {
-          ws.getCell(r, colGroup2Start + 3 + i).fill = branch2Fill;
-        }
-      }
-    });
-  }
+  // Removed late Branch 2 highlight block since it is now applied during row generation
 
   // Set column widths
   ws.getColumn(1).width = 5;

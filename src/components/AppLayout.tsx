@@ -29,6 +29,7 @@ const nav = [
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onboarded = useStore((s) => s.onboarded);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const logout = useAuthStore((s) => s.logout);
   const router = useRouter();
   const [wizardOpen, setWizardOpen] = useState(false);
@@ -41,10 +42,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (hydrated && !onboarded) {
-      setWizardOpen(true);
+    if (hydrated) {
+      if (!isAuthenticated) {
+        router.navigate({ to: "/login" });
+      } else if (!onboarded) {
+        setWizardOpen(true);
+      }
     }
-  }, [hydrated, onboarded]);
+  }, [hydrated, onboarded, isAuthenticated, router]);
   return (
     <div className="min-h-screen bg-muted/30 print:bg-white">
       <SetupWizard open={wizardOpen} onClose={() => setWizardOpen(false)} />

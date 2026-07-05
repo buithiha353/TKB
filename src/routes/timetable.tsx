@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TimetableAll } from "@/components/timetable/TimetableAll";
 import { useStore } from "@/lib/timetable/store";
 import { DAY_NAMES, slotKey } from "@/lib/timetable/types";
 import type { Lesson, Session, Subject, Teacher, SchoolClass } from "@/lib/timetable/types";
@@ -349,6 +350,7 @@ function TimetablePage() {
           <TabsList>
             <TabsTrigger value="class">Theo lớp</TabsTrigger>
             <TabsTrigger value="teacher">Theo GV</TabsTrigger>
+            <TabsTrigger value="all">Toàn trường</TabsTrigger>
           </TabsList>
         </Tabs>
         {mode === "class" ? (
@@ -364,7 +366,7 @@ function TimetablePage() {
               ))}
             </SelectContent>
           </Select>
-        ) : (
+        ) : mode === "teacher" ? (
           <Select value={selectedTeacher} onValueChange={setSelectedTeacher}>
             <SelectTrigger className="w-56">
               <SelectValue placeholder="Chọn GV" />
@@ -377,7 +379,7 @@ function TimetablePage() {
               ))}
             </SelectContent>
           </Select>
-        )}
+        ) : null}
       </div>
 
       <div className="hidden print:mb-3 print:block">
@@ -446,7 +448,10 @@ function TimetablePage() {
 
       <Card>
         <CardContent className="p-0">
-          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          {mode === "all" ? (
+            <TimetableAll />
+          ) : (
+            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
@@ -500,6 +505,7 @@ function TimetablePage() {
               </table>
             </div>
           </DndContext>
+          )}
         </CardContent>
       </Card>
 
