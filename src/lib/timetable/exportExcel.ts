@@ -111,6 +111,8 @@ export async function exportTimetableToExcel({
     for (let pIdx = 0; pIdx < periodsList.length; pIdx++) {
       const row = ws.getRow(currentRowIdx);
       const periodDef = periodsList[pIdx];
+      const isPM = periodDef.session === "PM";
+      const pmFill: ExcelJS.Fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE2EFDA" } };
 
       // Fill Group 1 (Grade 6,7)
       if (pIdx === 0) { // start of day
@@ -129,10 +131,12 @@ export async function exportTimetableToExcel({
         sessionCell1.value = periodDef.session === "AM" ? "Sáng" : "Chiều";
         sessionCell1.alignment = { vertical: "middle", horizontal: "center", textRotation: 90 };
         sessionCell1.font = { bold: true };
+        if (isPM) sessionCell1.fill = pmFill;
       }
 
       row.getCell(3).value = periodDef.period;
       row.getCell(3).alignment = { horizontal: "center" };
+      if (isPM) row.getCell(3).fill = pmFill;
 
       // Fill Classes Group 1
       group1.forEach((c, i) => {
@@ -144,6 +148,7 @@ export async function exportTimetableToExcel({
           cell.value = `${sub?.shortName || ""} - ${teacher?.name || ""}`;
         }
         cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        if (isPM) cell.fill = pmFill;
       });
 
 
@@ -164,10 +169,12 @@ export async function exportTimetableToExcel({
         sessionCell2.value = periodDef.session === "AM" ? "Sáng" : "Chiều";
         sessionCell2.alignment = { vertical: "middle", horizontal: "center", textRotation: 90 };
         sessionCell2.font = { bold: true };
+        if (isPM) sessionCell2.fill = pmFill;
       }
 
       row.getCell(colGroup2Start + 2).value = periodDef.period;
       row.getCell(colGroup2Start + 2).alignment = { horizontal: "center" };
+      if (isPM) row.getCell(colGroup2Start + 2).fill = pmFill;
 
       // Fill Classes Group 2
       group2.forEach((c, i) => {
@@ -179,6 +186,7 @@ export async function exportTimetableToExcel({
           cell.value = `${sub?.shortName || ""} - ${teacher?.name || ""}`;
         }
         cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        if (isPM) cell.fill = pmFill;
       });
 
       currentRowIdx++;

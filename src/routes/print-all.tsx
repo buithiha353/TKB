@@ -93,14 +93,17 @@ function PrintAllPage() {
                     {p.period === 1 && (
                       <td
                         rowSpan={p.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods}
-                        className="border border-black p-1 text-center font-bold align-middle"
+                        className={cn(
+                          "border border-black p-1 text-center font-bold align-middle",
+                          p.session === "PM" && "bg-[#E2EFDA]"
+                        )}
                         style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                       >
                         {p.session === "AM" ? "Sáng" : "Chiều"}
                       </td>
                     )}
 
-                    <td className="border border-black p-1 text-center font-medium">
+                    <td className={cn("border border-black p-1 text-center font-medium", p.session === "PM" && "bg-[#E2EFDA]")}>
                       {p.period}
                     </td>
 
@@ -115,6 +118,7 @@ function PrintAllPage() {
                           key={c.id}
                           className={cn(
                             "border border-black p-1 text-center",
+                            p.session === "PM" && "bg-[#E2EFDA]",
                             c.schoolId === branch2Id && "bg-[#FFFFCC]"
                           )}
                         >
