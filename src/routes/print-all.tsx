@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@/lib/timetable/store";
 import { DAY_NAMES } from "@/lib/timetable/types";
-import { getPeriodsList } from "@/lib/timetable/scheduler";
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Printer } from "lucide-react";
@@ -17,7 +16,14 @@ function PrintAllPage() {
 
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
   const teacherMap = new Map(teachers.map((t) => [t.id, t]));
-  const periodsList = getPeriodsList(settings);
+  const periodsList = useMemo(() => {
+    const list: { session: "AM" | "PM"; period: number; label: string }[] = [];
+    for (let p = 1; p <= settings.morningPeriods; p++)
+      list.push({ session: "AM", period: p, label: `Sáng ${p}` });
+    for (let p = 1; p <= settings.afternoonPeriods; p++)
+      list.push({ session: "PM", period: p, label: `Chiều ${p}` });
+    return list;
+  }, [settings]);
 
   const branch2Id = schools.length > 1 ? schools[1].id : null;
 
@@ -68,7 +74,7 @@ function PrintAllPage() {
           <tbody>
             {Array.from({ length: settings.days }).map((_, d) => {
               const dayName = DAY_NAMES[d];
-              const totalPeriodsPerDay = settings.periodsPerMorning + settings.periodsPerAfternoon;
+              const totalPeriodsPerDay = settings.morningPeriods + settings.afternoonPeriods;
 
               return periodsList.map((p, pIdx) => {
                 return (
@@ -86,7 +92,7 @@ function PrintAllPage() {
                     {/* Render 'Sáng/Chiều' cell once per session */}
                     {p.period === 1 && (
                       <td
-                        rowSpan={p.session === "AM" ? settings.periodsPerMorning : settings.periodsPerAfternoon}
+                        rowSpan={p.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods}
                         className="border border-black p-1 text-center font-bold align-middle"
                         style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                       >

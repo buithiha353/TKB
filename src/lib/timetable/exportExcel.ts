@@ -1,7 +1,6 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { DAY_NAMES, Session, SchoolClass, Subject, Teacher, Timetable, School } from "./types";
-import { getPeriodsList } from "./scheduler";
+import { DAY_NAMES, Session, SchoolClass, Subject, Teacher, Timetable, School, Settings } from "./types";
 
 export async function exportTimetableToExcel({
   schools,
@@ -16,12 +15,7 @@ export async function exportTimetableToExcel({
   subjects: Subject[];
   teachers: Teacher[];
   timetable: Timetable;
-  settings: {
-    schoolName: string;
-    days: number;
-    periodsPerMorning: number;
-    periodsPerAfternoon: number;
-  };
+  settings: Settings;
 }) {
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet("TKB Toàn Trường", {
@@ -100,10 +94,15 @@ export async function exportTimetableToExcel({
   headerRow.alignment = { horizontal: "center", vertical: "middle" };
 
   // Generate rows
-  const periodsList = getPeriodsList(settings);
+  const periodsList: { session: Session; period: number; label: string }[] = [];
+  for (let p = 1; p <= settings.morningPeriods; p++)
+    periodsList.push({ session: "AM", period: p, label: `Sáng ${p}` });
+  for (let p = 1; p <= settings.afternoonPeriods; p++)
+    periodsList.push({ session: "PM", period: p, label: `Chiều ${p}` });
+
   let currentRowIdx = 5;
 
-  const totalPeriodsPerDay = settings.periodsPerMorning + settings.periodsPerAfternoon;
+  const totalPeriodsPerDay = settings.morningPeriods + settings.afternoonPeriods;
 
   for (let d = 0; d < settings.days; d++) {
     const dayName = DAY_NAMES[d];
@@ -124,7 +123,7 @@ export async function exportTimetableToExcel({
       }
 
       if (periodDef.period === 1) { // start of session
-        const sessionLen = periodDef.session === "AM" ? settings.periodsPerMorning : settings.periodsPerAfternoon;
+        const sessionLen = periodDef.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods;
         ws.mergeCells(currentRowIdx, 2, currentRowIdx + sessionLen - 1, 2);
         const sessionCell1 = ws.getCell(currentRowIdx, 2);
         sessionCell1.value = periodDef.session === "AM" ? "Sáng" : "Chiều";
@@ -159,7 +158,7 @@ export async function exportTimetableToExcel({
       }
 
       if (periodDef.period === 1) { // start of session
-        const sessionLen = periodDef.session === "AM" ? settings.periodsPerMorning : settings.periodsPerAfternoon;
+        const sessionLen = periodDef.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods;
         ws.mergeCells(currentRowIdx, colGroup2Start + 1, currentRowIdx + sessionLen - 1, colGroup2Start + 1);
         const sessionCell2 = ws.getCell(currentRowIdx, colGroup2Start + 1);
         sessionCell2.value = periodDef.session === "AM" ? "Sáng" : "Chiều";
