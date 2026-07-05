@@ -99,8 +99,11 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
     const cls = classMap.get(req.classId)!;
     const sub = subjectMap.get(req.subjectId)!;
 
-    // GV nghỉ buổi sáng
-    if (slot.session === "AM" && teacher.morningOffDay === slot.day) return "bad";
+    // 1. GV nghỉ sáng (hoặc nghỉ cả ngày)
+    if (ctx.settings.ruleTeacherMorningOff && slot.day === teacher.offDay) {
+      if (slot.session === "AM") return "bad";
+      if (slot.session === "PM" && teacher.isOffFullDay) return "bad";
+    }
 
     // Giới hạn tiết sáng thứ 2
     if (settings.maxMondayMorningPeriods && slot.day === 1 && slot.session === "AM" && slot.period > settings.maxMondayMorningPeriods) {
@@ -153,7 +156,7 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
     }
 
     // Ưu tiên điểm trường chính
-    if (teacher.primarySchoolId !== cls.schoolId) return "soft";
+    if (!teacher.schoolIds.includes(cls.schoolId)) return "soft";
 
     return "ok";
   };
@@ -238,7 +241,7 @@ export function checkConflict(
   const teacher = ctx.teachers.find((t) => t.id === lesson.teacherId);
   const cls = ctx.classes.find((c) => c.id === target.classId);
   if (!teacher || !cls) return "Dữ liệu không hợp lệ";
-  if (target.session === "AM" && teacher.morningOffDay === target.day)
+  if (target.day === teacher.offDay && (target.session === "AM" || teacher.isOffFullDay))
     return `GV ${teacher.name} nghỉ buổi sáng thứ ${target.day + 1}`;
   // Không tạo khoảng trống xen giữa: đích đến phải liền kề với các tiết đã có
   if (target.period > 1) {

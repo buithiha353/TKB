@@ -315,10 +315,9 @@ function TimetablePage() {
                     </div>
                     <div className="flex items-center gap-1 text-xs">
                       {!ok && (
-                        <AlertTriangle 
-                          className="h-4 w-4 text-amber-600" 
-                          title={over ? "Thừa tiết (đã xếp vượt quá số tiết được phân công)" : "Thiếu tiết (chưa xếp đủ số tiết được phân công)"} 
-                        />
+                        <div title={over ? "Thừa tiết (đã xếp vượt quá số tiết được phân công)" : "Thiếu tiết (chưa xếp đủ số tiết được phân công)"}>
+                          <AlertTriangle className="h-4 w-4 text-amber-600" />
+                        </div>
                       )}
                       <span className={cn("font-mono", over && "text-destructive")} title="Số tiết đã xếp / Tổng số tiết phân công">
                         {r.placed}/{r.need}

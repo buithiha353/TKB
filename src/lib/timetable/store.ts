@@ -47,6 +47,7 @@ interface State {
   addTeacher: (t: Omit<Teacher, "id">) => void;
   updateTeacher: (id: ID, patch: Partial<Teacher>) => void;
   removeTeacher: (id: ID) => void;
+  syncTeacherClasses: (teacherId: ID, classIds: ID[]) => void;
 
   addAssignment: (a: Omit<Assignment, "id">) => void;
   updateAssignment: (id: ID, patch: Partial<Assignment>) => void;
@@ -155,6 +156,34 @@ export const useStore = create<State>()(
           teachers: st.teachers.filter((x) => x.id !== id),
           assignments: st.assignments.filter((a) => a.teacherId !== id),
         })),
+      syncTeacherClasses: (teacherId, classIds) =>
+        set((st) => {
+          const teacher = st.teachers.find((t) => t.id === teacherId);
+          if (!teacher) return st;
+          // Lấy danh sách classId hiện tại của giáo viên này
+          const currentClassIds = Array.from(new Set(st.assignments.filter((a) => a.teacherId === teacherId).map((a) => a.classId)));
+          
+          const toRemove = currentClassIds.filter((cid) => !classIds.includes(cid));
+          const toAdd = classIds.filter((cid) => !currentClassIds.includes(cid));
+          
+          let nextAss = st.assignments.filter((a) => !(a.teacherId === teacherId && toRemove.includes(a.classId)));
+          
+          for (const cid of toAdd) {
+            for (const sid of teacher.subjectIds) {
+              const sub = st.subjects.find((s) => s.id === sid);
+              if (sub) {
+                nextAss.push({
+                  id: rid(),
+                  teacherId,
+                  classId: cid,
+                  subjectId: sid,
+                  periods: sub.defaultPeriods,
+                });
+              }
+            }
+          }
+          return { assignments: nextAss };
+        }),
 
       addAssignment: (a) =>
         set((st) => ({

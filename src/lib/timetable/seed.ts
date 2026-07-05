@@ -299,9 +299,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_toan"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": null,
-    "morningOffDay": 1,
+    "schoolIds": ["qoagfnop"],
+    "offDay": 1,
+    "isOffFullDay": false,
     "id": "e4m9e2rg"
   },
   {
@@ -309,9 +309,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_toan"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": null,
-    "morningOffDay": 1,
+    "schoolIds": ["qoagfnop"],
+    "offDay": 1,
+    "isOffFullDay": false,
     "id": "mwggmdrk"
   },
   {
@@ -320,9 +320,9 @@ export const seedTeachers: Teacher[] = [
       "sub_toan",
       "sub_khtn"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 2,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 2,
+    "isOffFullDay": false,
     "id": "ypmz3lx5"
   },
   {
@@ -331,9 +331,9 @@ export const seedTeachers: Teacher[] = [
       "sub_toan",
       "sub_cn"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 2,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 2,
+    "isOffFullDay": false,
     "id": "sh1bgt5o"
   },
   {
@@ -342,9 +342,9 @@ export const seedTeachers: Teacher[] = [
       "sub_toan",
       "sub_th"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 5,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 5,
+    "isOffFullDay": false,
     "id": "mpeu64t5"
   },
   {
@@ -352,9 +352,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_van"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": null,
-    "morningOffDay": 3,
+    "schoolIds": ["qoagfnop"],
+    "offDay": 3,
+    "isOffFullDay": false,
     "id": "uzaxob71"
   },
   {
@@ -362,9 +362,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_van"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": null,
-    "morningOffDay": 4,
+    "schoolIds": ["qoagfnop"],
+    "offDay": 4,
+    "isOffFullDay": false,
     "id": "s7rmgqgm"
   },
   {
@@ -372,9 +372,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_anh"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": null,
-    "morningOffDay": 5,
+    "schoolIds": ["qoagfnop"],
+    "offDay": 5,
+    "isOffFullDay": false,
     "id": "rpc55kla"
   },
   {
@@ -382,9 +382,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_anh"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 4,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 4,
+    "isOffFullDay": false,
     "id": "ybylflgx"
   },
   {
@@ -393,9 +393,9 @@ export const seedTeachers: Teacher[] = [
       "sub_anh",
       "sub_htn"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 2,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 2,
+    "isOffFullDay": false,
     "id": "p79vgsf2"
   },
   {
@@ -403,9 +403,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_nt"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": null,
-    "morningOffDay": 2,
+    "schoolIds": ["qoagfnop"],
+    "offDay": 2,
+    "isOffFullDay": false,
     "id": "lmp0gsg9"
   },
   {
@@ -413,9 +413,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_nt"
     ],
-    "primarySchoolId": "ximosi8q",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 4,
+    "schoolIds": ["ximosi8q", "ximosi8q"],
+    "offDay": 4,
+    "isOffFullDay": false,
     "id": "551r02n6"
   },
   {
@@ -424,9 +424,9 @@ export const seedTeachers: Teacher[] = [
       "sub_gdcd",
       "sub_ddp"
     ],
-    "primarySchoolId": "ximosi8q",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 4,
+    "schoolIds": ["ximosi8q", "ximosi8q"],
+    "offDay": 4,
+    "isOffFullDay": false,
     "id": "u37a163d"
   },
   {
@@ -434,9 +434,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_gdtc"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 5,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 5,
+    "isOffFullDay": false,
     "id": "puc9wjt4"
   },
   {
@@ -444,9 +444,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_th"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 3,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 3,
+    "isOffFullDay": false,
     "id": "y85qo3qy"
   },
   {
@@ -454,9 +454,9 @@ export const seedTeachers: Teacher[] = [
     "subjectIds": [
       "sub_khtn"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 1,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 1,
+    "isOffFullDay": false,
     "id": "gs4ipyh7"
   },
   {
@@ -465,9 +465,9 @@ export const seedTeachers: Teacher[] = [
       "sub_lsdl",
       "sub_ddp"
     ],
-    "primarySchoolId": "qoagfnop",
-    "secondarySchoolId": "ximosi8q",
-    "morningOffDay": 4,
+    "schoolIds": ["qoagfnop", "ximosi8q"],
+    "offDay": 4,
+    "isOffFullDay": false,
     "id": "ejx50a7e"
   }
 ];

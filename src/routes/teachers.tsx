@@ -1,83 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import { useStore } from "@/lib/timetable/store";
-import type { Teacher } from "@/lib/timetable/types";
 import { DAY_NAMES } from "@/lib/timetable/types";
-import { Plus, Trash2, Pencil } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Plus, Trash2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/teachers")({
   component: TeachersPage,
   head: () => ({ meta: [{ title: "Giáo viên – TKB THCS" }] }),
 });
 
-const emptyT: Omit<Teacher, "id"> = {
-  name: "",
-  subjectIds: [],
-  primarySchoolId: "",
-  secondarySchoolId: null,
-  morningOffDay: 5,
-};
-
 function TeachersPage() {
-  const { teachers, subjects, schools, addTeacher, updateTeacher, removeTeacher } = useStore();
-  const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<{ id: string | null; data: Omit<Teacher, "id"> }>({
-    id: null,
-    data: { ...emptyT, primarySchoolId: schools[0]?.id || "" },
-  });
+  const { teachers, subjects, classes, schools, assignments, addTeacher, updateTeacher, removeTeacher, syncTeacherClasses } = useStore();
 
-  const startAdd = () => {
-    setEditing({ id: null, data: { ...emptyT, primarySchoolId: schools[0]?.id || "" } });
-    setOpen(true);
-  };
-  const startEdit = (t: Teacher) => {
-    setEditing({ id: t.id, data: { ...t } });
-    setOpen(true);
-  };
-  const save = () => {
-    const d = editing.data;
-    if (!d.name.trim() || !d.primarySchoolId || d.subjectIds.length === 0) {
-      toast.error("Vui lòng nhập tên, điểm trường chính và ít nhất 1 môn dạy");
-      return;
-    }
-    if (editing.id) updateTeacher(editing.id, d);
-    else addTeacher(d);
-    setOpen(false);
-  };
-
-  const toggleSubject = (sid: string) => {
-    setEditing((e) => ({
-      ...e,
-      data: {
-        ...e.data,
-        subjectIds: e.data.subjectIds.includes(sid)
-          ? e.data.subjectIds.filter((x) => x !== sid)
-          : [...e.data.subjectIds, sid],
-      },
-    }));
+  const handleAddRow = () => {
+    addTeacher({
+      name: "",
+      subjectIds: [],
+      schoolIds: [],
+      offDay: 5,
+      isOffFullDay: false
+    });
   };
 
   return (
@@ -86,141 +34,182 @@ function TeachersPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Giáo viên</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Mỗi GV có 1 buổi sáng nghỉ trong tuần và có thể dạy ở 2 điểm trường (ưu tiên chính).
+            Quản lý giáo viên, môn dạy, lớp dạy, điểm trường và ngày nghỉ. Dữ liệu tự động lưu khi chỉnh sửa.
           </p>
         </div>
-        <Button onClick={startAdd}>
-          <Plus className="mr-2 h-4 w-4" /> Thêm GV
-        </Button>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-        {teachers.map((t) => {
-          const primary = schools.find((s) => s.id === t.primarySchoolId);
-          const secondary = schools.find((s) => s.id === t.secondarySchoolId);
-          return (
-            <Card key={t.id}>
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="truncate font-semibold">{t.name}</div>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {t.subjectIds.map((sid) => {
-                        const s = subjects.find((x) => x.id === sid);
-                        return s ? (
-                          <Badge key={sid} variant="secondary" className="text-xs">
-                            {s.shortName}
-                          </Badge>
-                        ) : null;
-                      })}
+      <div className="rounded-md border bg-card overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b bg-muted/50 text-left">
+              <th className="p-3 font-medium w-[200px]">Họ và tên</th>
+              <th className="p-3 font-medium w-[200px]">Môn dạy</th>
+              <th className="p-3 font-medium w-[250px]">Lớp dạy</th>
+              <th className="p-3 font-medium w-[180px]">Điểm trường</th>
+              <th className="p-3 font-medium w-[200px]">Ngày nghỉ</th>
+              <th className="p-3 font-medium w-[50px]"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {teachers.map((t) => {
+              const currentClassIds = Array.from(new Set(assignments.filter(a => a.teacherId === t.id).map(a => a.classId)));
+
+              return (
+                <tr key={t.id} className="border-b last:border-0 hover:bg-muted/30">
+                  <td className="p-2 align-top">
+                    <Input 
+                      className="h-auto py-1.5 shadow-none bg-transparent border-transparent hover:border-input focus:border-input focus:bg-background"
+                      value={t.name}
+                      onChange={(e) => updateTeacher(t.id, { name: e.target.value })}
+                      placeholder="Nhập tên..."
+                    />
+                  </td>
+                  <td className="p-2 align-top">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-auto min-h-8 py-1.5 w-full justify-start font-normal px-2 text-left h-auto whitespace-normal break-words">
+                          {t.subjectIds.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {t.subjectIds.map(sid => {
+                                const sub = subjects.find(s => s.id === sid);
+                                return sub ? <Badge key={sid} variant="secondary" className="px-1.5 py-0 font-normal">{sub.shortName}</Badge> : null;
+                              })}
+                            </div>
+                          ) : <span className="text-muted-foreground">Chọn môn...</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[300px] p-2" align="start">
+                        <div className="grid grid-cols-2 gap-2">
+                          {subjects.map(s => (
+                            <label key={s.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 p-1 rounded">
+                              <Checkbox 
+                                checked={t.subjectIds.includes(s.id)}
+                                onCheckedChange={(checked) => {
+                                  const next = checked 
+                                    ? [...t.subjectIds, s.id] 
+                                    : t.subjectIds.filter(x => x !== s.id);
+                                  updateTeacher(t.id, { subjectIds: next });
+                                }}
+                              />
+                              <span className="truncate">{s.shortName}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </td>
+                  <td className="p-2 align-top">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-auto min-h-8 py-1.5 w-full justify-start font-normal px-2 text-left h-auto whitespace-normal break-words">
+                          {currentClassIds.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {currentClassIds.map(cid => {
+                                const cls = classes.find(c => c.id === cid);
+                                return cls ? <Badge key={cid} variant="secondary" className="px-1.5 py-0 font-normal">{cls.name}</Badge> : null;
+                              })}
+                            </div>
+                          ) : <span className="text-muted-foreground">Chọn lớp...</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[300px] p-2 max-h-[300px] overflow-y-auto" align="start">
+                        <div className="grid grid-cols-3 gap-2">
+                          {classes.map(c => (
+                            <label key={c.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 p-1 rounded">
+                              <Checkbox 
+                                checked={currentClassIds.includes(c.id)}
+                                onCheckedChange={(checked) => {
+                                  const next = checked 
+                                    ? [...currentClassIds, c.id] 
+                                    : currentClassIds.filter(x => x !== c.id);
+                                  syncTeacherClasses(t.id, next);
+                                }}
+                              />
+                              <span className="truncate">{c.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </td>
+                  <td className="p-2 align-top">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-auto min-h-8 py-1.5 w-full justify-start font-normal px-2 text-left h-auto whitespace-normal break-words">
+                          {t.schoolIds?.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {t.schoolIds.map(sid => {
+                                const school = schools.find(s => s.id === sid);
+                                return school ? <Badge key={sid} variant="secondary" className="px-1.5 py-0 font-normal">{school.name}</Badge> : null;
+                              })}
+                            </div>
+                          ) : <span className="text-muted-foreground">Chọn...</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-2" align="start">
+                        <div className="space-y-1">
+                          {schools.map(s => (
+                            <label key={s.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 p-1.5 rounded">
+                              <Checkbox 
+                                checked={t.schoolIds?.includes(s.id)}
+                                onCheckedChange={(checked) => {
+                                  const currentIds = t.schoolIds || [];
+                                  const next = checked 
+                                    ? [...currentIds, s.id] 
+                                    : currentIds.filter(x => x !== s.id);
+                                  updateTeacher(t.id, { schoolIds: next });
+                                }}
+                              />
+                              <span className="truncate">{s.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </td>
+                  <td className="p-2 align-top">
+                    <div className="flex items-center gap-2 h-8">
+                      <Select value={String(t.offDay)} onValueChange={(v) => updateTeacher(t.id, { offDay: Number(v) })}>
+                        <SelectTrigger className="h-8 shadow-none flex-1"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {DAY_NAMES.map((d, i) => (
+                            <SelectItem key={i} value={String(i + 1)}>Thứ {i + 2}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <label className="flex items-center gap-1.5 text-xs whitespace-nowrap cursor-pointer">
+                        <Checkbox 
+                          checked={t.isOffFullDay} 
+                          onCheckedChange={(c) => updateTeacher(t.id, { isOffFullDay: !!c })} 
+                        />
+                        Cả ngày
+                      </label>
                     </div>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => startEdit(t)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => removeTeacher(t.id)}>
+                  </td>
+                  <td className="p-2 align-top text-center">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => removeTeacher(t.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                  </div>
-                </div>
-                <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-                  <div>Chính: <span className="text-foreground">{primary?.name || "—"}</span></div>
-                  {secondary && <div>Phụ: <span className="text-foreground">{secondary.name}</span></div>}
-                  <div>Nghỉ: <span className="text-foreground">Sáng {DAY_NAMES[t.morningOffDay - 1]}</span></div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                  </td>
+                </tr>
+              );
+            })}
+            {teachers.length === 0 && (
+              <tr>
+                <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                  Chưa có dữ liệu giáo viên.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        <div className="p-2 border-t">
+          <Button variant="ghost" size="sm" onClick={handleAddRow} className="w-full justify-start text-muted-foreground hover:text-foreground">
+            <Plus className="mr-2 h-4 w-4" /> Thêm dòng mới
+          </Button>
+        </div>
       </div>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{editing.id ? "Sửa giáo viên" : "Thêm giáo viên"}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
-            <div>
-              <Label>Họ và tên</Label>
-              <Input
-                value={editing.data.name}
-                onChange={(e) => setEditing({ ...editing, data: { ...editing.data, name: e.target.value } })}
-              />
-            </div>
-            <div>
-              <Label>Môn dạy</Label>
-              <div className="mt-1 grid grid-cols-2 gap-2 rounded-md border p-2 md:grid-cols-3">
-                {subjects.map((s) => (
-                  <label key={s.id} className="flex items-center gap-2 text-sm">
-                    <Checkbox
-                      checked={editing.data.subjectIds.includes(s.id)}
-                      onCheckedChange={() => toggleSubject(s.id)}
-                    />
-                    <span className="truncate">{s.shortName}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Điểm trường chính</Label>
-                <Select
-                  value={editing.data.primarySchoolId}
-                  onValueChange={(v) => setEditing({ ...editing, data: { ...editing.data, primarySchoolId: v } })}
-                >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {schools.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label>Điểm trường phụ (tùy chọn)</Label>
-                <Select
-                  value={editing.data.secondarySchoolId || "none"}
-                  onValueChange={(v) =>
-                    setEditing({
-                      ...editing,
-                      data: { ...editing.data, secondarySchoolId: v === "none" ? null : v },
-                    })
-                  }
-                >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">— Không —</SelectItem>
-                    {schools
-                      .filter((s) => s.id !== editing.data.primarySchoolId)
-                      .map((s) => (
-                        <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <Label>Buổi sáng nghỉ trong tuần</Label>
-              <Select
-                value={String(editing.data.morningOffDay)}
-                onValueChange={(v) => setEditing({ ...editing, data: { ...editing.data, morningOffDay: Number(v) } })}
-              >
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {DAY_NAMES.map((d, i) => (
-                    <SelectItem key={i} value={String(i + 1)}>Sáng {d}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Hủy</Button>
-            <Button onClick={save}>Lưu</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </AppLayout>
   );
 }

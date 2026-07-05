@@ -26,9 +26,9 @@ export interface Teacher {
   id: ID;
   name: string;
   subjectIds: ID[];
-  primarySchoolId: ID;
-  secondarySchoolId?: ID | null;
-  morningOffDay: number; // 1..5, buổi sáng nghỉ trong tuần
+  schoolIds: ID[];
+  offDay: number; // 1..5, buổi sáng nghỉ trong tuần (hoặc cả ngày)
+  isOffFullDay: boolean;
 }
 
 export interface Assignment {
