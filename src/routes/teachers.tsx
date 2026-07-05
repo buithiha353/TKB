@@ -22,7 +22,7 @@ function TeachersPage() {
     addTeacher({
       name: "",
       subjectIds: [],
-      schoolIds: [],
+      schoolIds: schools.length > 0 ? [schools[0].id] : [],
       offDay: 5,
       isOffFullDay: false
     });
@@ -46,7 +46,7 @@ function TeachersPage() {
               <th className="p-3 font-medium w-[200px]">Họ và tên</th>
               <th className="p-3 font-medium w-[200px]">Môn dạy</th>
               <th className="p-3 font-medium w-[250px]">Lớp dạy</th>
-              <th className="p-3 font-medium w-[180px]">Điểm trường</th>
+              {schools.length > 1 && <th className="p-3 font-medium w-[180px]">Điểm trường</th>}
               <th className="p-3 font-medium w-[200px]">Ngày nghỉ</th>
               <th className="p-3 font-medium w-[50px]"></th>
             </tr>
@@ -133,41 +133,43 @@ function TeachersPage() {
                       </PopoverContent>
                     </Popover>
                   </td>
-                  <td className="p-2 align-top">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="h-auto min-h-8 py-1.5 w-full justify-start font-normal px-2 text-left h-auto whitespace-normal break-words">
-                          {t.schoolIds?.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {t.schoolIds.map(sid => {
-                                const school = schools.find(s => s.id === sid);
-                                return school ? <Badge key={sid} variant="secondary" className="px-1.5 py-0 font-normal">{school.name}</Badge> : null;
-                              })}
-                            </div>
-                          ) : <span className="text-muted-foreground">Chọn...</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-2" align="start">
-                        <div className="space-y-1">
-                          {schools.map(s => (
-                            <label key={s.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 p-1.5 rounded">
-                              <Checkbox 
-                                checked={t.schoolIds?.includes(s.id)}
-                                onCheckedChange={(checked) => {
-                                  const currentIds = t.schoolIds || [];
-                                  const next = checked 
-                                    ? [...currentIds, s.id] 
-                                    : currentIds.filter(x => x !== s.id);
-                                  updateTeacher(t.id, { schoolIds: next });
-                                }}
-                              />
-                              <span className="truncate">{s.name}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  </td>
+                  {schools.length > 1 && (
+                    <td className="p-2 align-top">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className="h-auto min-h-8 py-1.5 w-full justify-start font-normal px-2 text-left h-auto whitespace-normal break-words">
+                            {t.schoolIds?.length > 0 ? (
+                              <div className="flex flex-wrap gap-1">
+                                {t.schoolIds.map(sid => {
+                                  const school = schools.find(s => s.id === sid);
+                                  return school ? <Badge key={sid} variant="secondary" className="px-1.5 py-0 font-normal">{school.name}</Badge> : null;
+                                })}
+                              </div>
+                            ) : <span className="text-muted-foreground">Chọn...</span>}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-2" align="start">
+                          <div className="space-y-1">
+                            {schools.map(s => (
+                              <label key={s.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 p-1.5 rounded">
+                                <Checkbox 
+                                  checked={t.schoolIds?.includes(s.id)}
+                                  onCheckedChange={(checked) => {
+                                    const currentIds = t.schoolIds || [];
+                                    const next = checked 
+                                      ? [...currentIds, s.id] 
+                                      : currentIds.filter(x => x !== s.id);
+                                    updateTeacher(t.id, { schoolIds: next });
+                                  }}
+                                />
+                                <span className="truncate">{s.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </td>
+                  )}
                   <td className="p-2 align-top">
                     <div className="flex items-center gap-2 h-8">
                       <Select value={String(t.offDay)} onValueChange={(v) => updateTeacher(t.id, { offDay: Number(v) })}>
