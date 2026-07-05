@@ -195,7 +195,7 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
 
   for (const req of requests) {
     // Sắp xếp slot theo mức độ ưu tiên
-    let prioritizedSlots = shuffle(slots);
+    const prioritizedSlots = shuffle(slots);
     if (settings.fillMorningFirst && settings.targetMorningPeriods) {
       const target = settings.targetMorningPeriods;
       prioritizedSlots.sort((a, b) => {

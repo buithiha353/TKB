@@ -72,6 +72,31 @@ const defaultSettings: Settings = {
   maxMondayMorningPeriods: 4,
 };
 
+type LegacyAssignment = Assignment & { periods?: number };
+
+interface ImportedData {
+  settings?: Settings;
+  schools?: School[];
+  classes?: SchoolClass[];
+  subjects?: Subject[];
+  teachers?: Teacher[];
+  assignments?: LegacyAssignment[];
+  timetable?: Timetable;
+}
+
+function normalizeAssignment(assignment: LegacyAssignment): Assignment {
+  if (assignment.periods === undefined) {
+    return assignment;
+  }
+
+  const { periods, ...nextAssignment } = assignment;
+  return {
+    ...nextAssignment,
+    morningPeriods: periods,
+    afternoonPeriods: 0,
+  };
+}
+
 function initial() {
   return {
     settings: defaultSettings,
@@ -152,7 +177,7 @@ export const useStore = create<State>()(
           const toRemove = currentClassIds.filter((cid) => !classIds.includes(cid));
           const toAdd = classIds.filter((cid) => !currentClassIds.includes(cid));
 
-          let nextAss = st.assignments.filter(
+          const nextAss = st.assignments.filter(
             (a) => !(a.teacherId === teacherId && toRemove.includes(a.classId)),
           );
 
@@ -193,21 +218,14 @@ export const useStore = create<State>()(
       exportData: () => JSON.stringify(get(), null, 2),
       importData: (json) => {
         try {
-          const data = JSON.parse(json);
+          const data = JSON.parse(json) as ImportedData;
           set({
             settings: data.settings || defaultSettings,
             schools: data.schools || [],
             classes: data.classes || [],
             subjects: data.subjects || [],
             teachers: data.teachers || [],
-            assignments: (data.assignments || []).map((a: any) => {
-              if (a.periods !== undefined) {
-                a.morningPeriods = a.periods;
-                a.afternoonPeriods = 0;
-                delete a.periods;
-              }
-              return a;
-            }),
+            assignments: (data.assignments || []).map(normalizeAssignment),
             timetable: data.timetable || {},
           });
           return true;
@@ -220,18 +238,12 @@ export const useStore = create<State>()(
     {
       name: "tkb-thcs-v1",
       version: 3,
-      migrate: (persistedState: any, version: number) => {
-        if (version < 3 && persistedState.assignments) {
-          persistedState.assignments = persistedState.assignments.map((a: any) => {
-            if (a.periods !== undefined) {
-              a.morningPeriods = a.periods;
-              a.afternoonPeriods = 0;
-              delete a.periods;
-            }
-            return a;
-          });
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as ImportedData;
+        if (version < 3 && state.assignments) {
+          state.assignments = state.assignments.map(normalizeAssignment);
         }
-        return persistedState;
+        return state;
       },
     },
   ),

@@ -1,6 +1,16 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { DAY_NAMES, Session, SchoolClass, Subject, Teacher, Timetable, School, Settings, slotKey } from "./types";
+import {
+  DAY_NAMES,
+  Session,
+  SchoolClass,
+  Subject,
+  Teacher,
+  Timetable,
+  School,
+  Settings,
+  slotKey,
+} from "./types";
 
 export async function exportTimetableToExcel({
   schools,
@@ -43,16 +53,20 @@ export async function exportTimetableToExcel({
   const branch2Id = schools.length > 1 ? schools[1].id : null;
 
   // Split classes
-  const group1 = classes.filter((c) => c.grade === 6 || c.grade === 7).sort((a, b) => a.name.localeCompare(b.name));
-  const group2 = classes.filter((c) => c.grade === 8 || c.grade === 9).sort((a, b) => a.name.localeCompare(b.name));
+  const group1 = classes
+    .filter((c) => c.grade === 6 || c.grade === 7)
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const group2 = classes
+    .filter((c) => c.grade === 8 || c.grade === 9)
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   // Determine columns
   // Group 1: Thứ (1), Buổi (2), Tiết (3), ... Classes (4 to 3 + group1.length)
   // Group 2: Thứ (gap + 1), Buổi (gap + 2), Tiết (gap + 3), ... Classes (gap + 4 to gap + 3 + group2.length)
-  
+
   const colGroup2Start = 3 + group1.length + 1; // 1 column gap or just next to it? Let's just put them next to each other
   // In the CSV it was: Thứ,Buổi, Tiết, 6A... 7G, Thứ,Buổi, Tiết, 8A... 9I
-  
+
   // Row 1 & 2: Header
   ws.mergeCells(1, 1, 1, 3 + group1.length);
   ws.getCell(1, 1).value = settings.schoolName;
@@ -112,11 +126,20 @@ export async function exportTimetableToExcel({
       const row = ws.getRow(currentRowIdx);
       const periodDef = periodsList[pIdx];
       const isPM = periodDef.session === "PM";
-      const pmFill: ExcelJS.Fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE2EFDA" } };
-      const branch2Fill: ExcelJS.Fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFF2CC" } };
+      const pmFill: ExcelJS.Fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFE2EFDA" },
+      };
+      const branch2Fill: ExcelJS.Fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFFFF2CC" },
+      };
 
       // Fill Group 1 (Grade 6,7)
-      if (pIdx === 0) { // start of day
+      if (pIdx === 0) {
+        // start of day
         // Merge "Thứ" cell for Group 1
         ws.mergeCells(currentRowIdx, 1, currentRowIdx + totalPeriodsPerDay - 1, 1);
         const dayCell1 = ws.getCell(currentRowIdx, 1);
@@ -125,8 +148,10 @@ export async function exportTimetableToExcel({
         dayCell1.font = { bold: true };
       }
 
-      if (periodDef.period === 1) { // start of session
-        const sessionLen = periodDef.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods;
+      if (periodDef.period === 1) {
+        // start of session
+        const sessionLen =
+          periodDef.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods;
         ws.mergeCells(currentRowIdx, 2, currentRowIdx + sessionLen - 1, 2);
         const sessionCell1 = ws.getCell(currentRowIdx, 2);
         sessionCell1.value = periodDef.session === "AM" ? "Sáng" : "Chiều";
@@ -153,20 +178,32 @@ export async function exportTimetableToExcel({
         if (isPM) cell.fill = pmFill;
       });
 
-
       // Fill Group 2 (Grade 8,9)
-      if (pIdx === 0) { // start of day
+      if (pIdx === 0) {
+        // start of day
         // Merge "Thứ" cell for Group 2
-        ws.mergeCells(currentRowIdx, colGroup2Start, currentRowIdx + totalPeriodsPerDay - 1, colGroup2Start);
+        ws.mergeCells(
+          currentRowIdx,
+          colGroup2Start,
+          currentRowIdx + totalPeriodsPerDay - 1,
+          colGroup2Start,
+        );
         const dayCell2 = ws.getCell(currentRowIdx, colGroup2Start);
         dayCell2.value = dayName;
         dayCell2.alignment = { vertical: "middle", horizontal: "center" };
         dayCell2.font = { bold: true };
       }
 
-      if (periodDef.period === 1) { // start of session
-        const sessionLen = periodDef.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods;
-        ws.mergeCells(currentRowIdx, colGroup2Start + 1, currentRowIdx + sessionLen - 1, colGroup2Start + 1);
+      if (periodDef.period === 1) {
+        // start of session
+        const sessionLen =
+          periodDef.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods;
+        ws.mergeCells(
+          currentRowIdx,
+          colGroup2Start + 1,
+          currentRowIdx + sessionLen - 1,
+          colGroup2Start + 1,
+        );
         const sessionCell2 = ws.getCell(currentRowIdx, colGroup2Start + 1);
         sessionCell2.value = periodDef.session === "AM" ? "Sáng" : "Chiều";
         sessionCell2.alignment = { vertical: "middle", horizontal: "center", textRotation: 90 };

@@ -35,16 +35,23 @@ import {
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Trash2, Printer, AlertTriangle, CheckCircle, FileSpreadsheet, FileText } from "lucide-react";
+import {
+  Sparkles,
+  Trash2,
+  Printer,
+  AlertTriangle,
+  CheckCircle,
+  FileSpreadsheet,
+  FileText,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { exportTimetableToExcel } from "@/lib/timetable/exportExcel";
 
 export const Route = createFileRoute("/timetable")({
   component: TimetablePage,
   head: () => ({ meta: [{ title: "Thời khóa biểu – TKB THCS" }] }),
 });
 
-type ViewMode = "class" | "teacher";
+type ViewMode = "class" | "teacher" | "all";
 
 function TimetablePage() {
   const store = useStore();
@@ -67,6 +74,7 @@ function TimetablePage() {
 
   const handleExportExcel = async () => {
     try {
+      const { exportTimetableToExcel } = await import("@/lib/timetable/exportExcel");
       await exportTimetableToExcel({
         schools: store.schools,
         classes: store.classes,
@@ -328,7 +336,7 @@ function TimetablePage() {
               <DropdownMenuItem onClick={handleExportExcel}>
                 <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" /> Xuất Excel (Toàn trường)
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => window.open('/print-all', '_blank')}>
+              <DropdownMenuItem onClick={() => window.open("/print-all", "_blank")}>
                 <FileText className="mr-2 h-4 w-4 text-red-600" /> In PDF (Toàn trường)
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -452,59 +460,59 @@ function TimetablePage() {
             <TimetableAll />
           ) : (
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="bg-muted/50">
-                    <th className="w-24 border-b border-r p-2 text-left text-xs font-medium uppercase text-muted-foreground">
-                      Tiết
-                    </th>
-                    {DAY_NAMES.slice(0, settings.days).map((d) => (
-                      <th
-                        key={d}
-                        className="border-b border-r p-2 text-xs font-medium uppercase text-muted-foreground"
-                      >
-                        {d}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr className="bg-muted/50">
+                      <th className="w-24 border-b border-r p-2 text-left text-xs font-medium uppercase text-muted-foreground">
+                        Tiết
                       </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {cells.map((row, ri) => {
-                    const p = periodsList[ri];
-                    const isFirstAfternoon = p.session === "PM" && p.period === 1;
-                    return (
-                      <tr
-                        key={ri}
-                        className={cn(isFirstAfternoon && "border-t-4 border-t-primary/30")}
-                      >
-                        <td
-                          className={cn(
-                            "border-b border-r p-2 text-xs font-medium",
-                            p.session === "AM"
-                              ? "bg-amber-50 dark:bg-amber-950/20"
-                              : "bg-sky-50 dark:bg-sky-950/20",
-                          )}
+                      {DAY_NAMES.slice(0, settings.days).map((d) => (
+                        <th
+                          key={d}
+                          className="border-b border-r p-2 text-xs font-medium uppercase text-muted-foreground"
                         >
-                          {p.label}
-                        </td>
-                        {row.map((cell) => (
-                          <TimetableCell
-                            key={`${cell.day}-${cell.session}-${cell.period}`}
-                            cell={cell}
-                            mode={mode}
-                            subjectMap={subjectMap}
-                            teacherMap={teacherMap}
-                            classMap={classMap}
-                          />
-                        ))}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </DndContext>
+                          {d}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cells.map((row, ri) => {
+                      const p = periodsList[ri];
+                      const isFirstAfternoon = p.session === "PM" && p.period === 1;
+                      return (
+                        <tr
+                          key={ri}
+                          className={cn(isFirstAfternoon && "border-t-4 border-t-primary/30")}
+                        >
+                          <td
+                            className={cn(
+                              "border-b border-r p-2 text-xs font-medium",
+                              p.session === "AM"
+                                ? "bg-amber-50 dark:bg-amber-950/20"
+                                : "bg-sky-50 dark:bg-sky-950/20",
+                            )}
+                          >
+                            {p.label}
+                          </td>
+                          {row.map((cell) => (
+                            <TimetableCell
+                              key={`${cell.day}-${cell.session}-${cell.period}`}
+                              cell={cell}
+                              mode={mode}
+                              subjectMap={subjectMap}
+                              teacherMap={teacherMap}
+                              classMap={classMap}
+                            />
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </DndContext>
           )}
         </CardContent>
       </Card>

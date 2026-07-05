@@ -48,8 +48,8 @@ function LoginPage() {
       } else {
         setError("Tài khoản hoặc mật khẩu không chính xác");
       }
-    } catch (err: any) {
-      setError(err.message || "Đã xảy ra lỗi khi đăng nhập");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Đã xảy ra lỗi khi đăng nhập");
     } finally {
       setLoading(false);
     }

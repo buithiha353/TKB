@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "TKB THCS",
+  "version": "0.1.0",
+  "identifier": "vn.tkbthcs.desktop",
+  "build": {
+    "beforeDevCommand": "npm run desktop:web:dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run desktop:web:build",
+    "frontendDist": "../dist-desktop"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "TKB THCS",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 1024,
+        "minHeight": 700,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "TKB THCS",
+    "category": "Education"
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEIyRjhDODRCNUNFM0ZDM0UKUldRKy9PTmNTOGo0c2hyWklvL1A5QURLVGpRRGdTZTB4Y0V1eTlpdU1oSmFOd3kxYjBXUTFOUm8K",
+      "endpoints": ["https://raw.githubusercontent.com/buithiha353/TKB/main/updates/latest.json"]
+    }
+  }
+}

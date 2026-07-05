@@ -28,12 +28,18 @@ function PrintAllPage() {
   const branch2Id = schools.length > 1 ? schools[1].id : null;
 
   const group1 = useMemo(
-    () => classes.filter((c) => c.grade === 6 || c.grade === 7).sort((a, b) => a.name.localeCompare(b.name)),
-    [classes]
+    () =>
+      classes
+        .filter((c) => c.grade === 6 || c.grade === 7)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [classes],
   );
   const group2 = useMemo(
-    () => classes.filter((c) => c.grade === 8 || c.grade === 9).sort((a, b) => a.name.localeCompare(b.name)),
-    [classes]
+    () =>
+      classes
+        .filter((c) => c.grade === 8 || c.grade === 9)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [classes],
   );
 
   useEffect(() => {
@@ -63,7 +69,7 @@ function PrintAllPage() {
                   key={c.id}
                   className={cn(
                     "border border-black p-1 w-24",
-                    c.schoolId === branch2Id && "bg-[#FFFFCC]"
+                    c.schoolId === branch2Id && "bg-[#FFFFCC]",
                   )}
                 >
                   {c.name}
@@ -92,10 +98,12 @@ function PrintAllPage() {
                     {/* Render 'Sáng/Chiều' cell once per session */}
                     {p.period === 1 && (
                       <td
-                        rowSpan={p.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods}
+                        rowSpan={
+                          p.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods
+                        }
                         className={cn(
                           "border border-black p-1 text-center font-bold align-middle",
-                          p.session === "PM" && "bg-[#E2EFDA]"
+                          p.session === "PM" && "bg-[#E2EFDA]",
                         )}
                         style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                       >
@@ -103,7 +111,12 @@ function PrintAllPage() {
                       </td>
                     )}
 
-                    <td className={cn("border border-black p-1 text-center font-medium", p.session === "PM" && "bg-[#E2EFDA]")}>
+                    <td
+                      className={cn(
+                        "border border-black p-1 text-center font-medium",
+                        p.session === "PM" && "bg-[#E2EFDA]",
+                      )}
+                    >
                       {p.period}
                     </td>
 
@@ -119,13 +132,15 @@ function PrintAllPage() {
                           className={cn(
                             "border border-black p-1 text-center",
                             p.session === "PM" && "bg-[#E2EFDA]",
-                            c.schoolId === branch2Id && "bg-[#FFFFCC]"
+                            c.schoolId === branch2Id && "bg-[#FFFFCC]",
                           )}
                         >
                           {lesson ? (
                             <div className="flex flex-col items-center justify-center leading-tight">
                               <span className="font-bold">{sub?.shortName}</span>
-                              <span className="text-[10px] text-muted-foreground">{teacher?.name}</span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {teacher?.name}
+                              </span>
                             </div>
                           ) : null}
                         </td>

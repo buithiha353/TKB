@@ -1,4 +1,4 @@
-# Hệ thống Xếp Thời Khoá Biểu THCS
+﻿# Hệ thống Xếp Thời Khoá Biểu THCS
 
 Hệ thống hỗ trợ xếp thời khoá biểu cho cấp THCS, được thiết kế chuyên biệt để đáp ứng các yêu cầu phức tạp về phân công giảng dạy, giáo viên chạy show giữa các điểm trường, cũng như các giới hạn về tiết học trong tuần.
 
@@ -27,8 +27,6 @@ npm run dev
 npm run build
 ```
 
-_Lưu ý: Mọi thiết lập liên quan đến hệ thống quản trị bằng bot Lovable đã được gỡ bỏ hoàn toàn, kho lưu trữ này hoạt động hoàn toàn độc lập và có thể triển khai lên bất kỳ nền tảng Hosting / Server tuỳ chỉnh nào._
-
 ## Bảo mật & Quyền truy cập
 
 - Dữ liệu đăng nhập (Tài khoản & Mật khẩu) được kiểm tra trực tiếp từ cấu hình Google Sheets.
@@ -37,3 +35,4 @@ _Lưu ý: Mọi thiết lập liên quan đến hệ thống quản trị bằng
 ## Bản quyền
 
 Phát triển dành riêng cho nghiệp vụ quản lý giáo dục trường THCS.
+

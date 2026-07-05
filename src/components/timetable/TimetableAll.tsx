@@ -22,11 +22,12 @@ export function TimetableAll() {
 
   // Render a single table with ALL classes
   const sortedClasses = useMemo(
-    () => [...classes].sort((a, b) => {
-      if (a.grade !== b.grade) return a.grade - b.grade;
-      return a.name.localeCompare(b.name);
-    }),
-    [classes]
+    () =>
+      [...classes].sort((a, b) => {
+        if (a.grade !== b.grade) return a.grade - b.grade;
+        return a.name.localeCompare(b.name);
+      }),
+    [classes],
   );
 
   return (
@@ -43,7 +44,9 @@ export function TimetableAll() {
                   key={c.id}
                   className={cn(
                     "border p-2 w-32 min-w-[120px] max-w-[120px]",
-                    c.schoolId === branch2Id ? "bg-yellow-100 dark:bg-yellow-900/30" : "bg-muted/50"
+                    c.schoolId === branch2Id
+                      ? "bg-yellow-100 dark:bg-yellow-900/30"
+                      : "bg-muted/50",
                   )}
                 >
                   {c.name}
@@ -74,10 +77,12 @@ export function TimetableAll() {
 
                     {isFirstOfSession && (
                       <td
-                        rowSpan={p.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods}
+                        rowSpan={
+                          p.session === "AM" ? settings.morningPeriods : settings.afternoonPeriods
+                        }
                         className={cn(
                           "border p-2 text-center font-bold align-middle sticky left-[48px] z-10",
-                          isPM ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-background"
+                          isPM ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-background",
                         )}
                         style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                       >
@@ -85,10 +90,12 @@ export function TimetableAll() {
                       </td>
                     )}
 
-                    <td className={cn(
-                      "border p-2 text-center font-medium sticky left-[96px] z-10",
-                      isPM ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-background"
-                    )}>
+                    <td
+                      className={cn(
+                        "border p-2 text-center font-medium sticky left-[96px] z-10",
+                        isPM ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-background",
+                      )}
+                    >
                       {p.period}
                     </td>
 
@@ -104,13 +111,15 @@ export function TimetableAll() {
                           className={cn(
                             "border p-2 text-center h-14",
                             isPM && "bg-emerald-50 dark:bg-emerald-950/20",
-                            c.schoolId === branch2Id && "bg-yellow-100 dark:bg-yellow-900/30"
+                            c.schoolId === branch2Id && "bg-yellow-100 dark:bg-yellow-900/30",
                           )}
                         >
                           {lesson ? (
                             <div className="flex flex-col text-xs">
                               <span className="font-semibold">{sub?.shortName || sub?.name}</span>
-                              <span className="text-muted-foreground truncate">{teacher?.shortName || teacher?.name}</span>
+                              <span className="text-muted-foreground truncate">
+                                {teacher?.name}
+                              </span>
                             </div>
                           ) : null}
                         </td>
