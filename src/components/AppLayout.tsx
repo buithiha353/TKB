@@ -27,9 +27,19 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onboarded = useStore((s) => s.onboarded);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
-    if (!onboarded) setWizardOpen(true);
-  }, [onboarded]);
+    // Đảm bảo chỉ mở wizard sau khi Zustand đã load xong localStorage
+    useStore.persist.onFinishHydration(() => setHydrated(true));
+    setHydrated(useStore.persist.hasHydrated());
+  }, []);
+
+  useEffect(() => {
+    if (hydrated && !onboarded) {
+      setWizardOpen(true);
+    }
+  }, [hydrated, onboarded]);
   return (
     <div className="min-h-screen bg-muted/30 print:bg-white">
       <SetupWizard open={wizardOpen} onClose={() => setWizardOpen(false)} />

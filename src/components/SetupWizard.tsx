@@ -111,7 +111,13 @@ export function SetupWizard({
       // Vẫn giữ danh mục môn chuẩn để user chỉ cần thêm GV & lớp
       if (subjects.length === 0) seedSubjects.forEach((s) => addSubject(s));
     } else if (draft.sites === 1 && schools.length > 1) {
-      toast.info("Bạn đã chọn 1 điểm trường. Vào 'Điểm trường & Lớp' để dọn lại nếu cần.");
+      // Nếu user chọn 1 điểm trường nhưng dữ liệu mẫu đang có >1 điểm trường -> Xoá bớt, gom về 1
+      const mainSchoolId = schools[0].id;
+      useStore.setState((st) => ({
+        schools: [st.schools[0]],
+        classes: st.classes.map(c => ({ ...c, schoolId: mainSchoolId })),
+        teachers: st.teachers.map(t => ({ ...t, schoolIds: [mainSchoolId] }))
+      }));
     }
 
     setOnboarded(true);
