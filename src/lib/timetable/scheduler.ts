@@ -102,6 +102,11 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
     // GV nghỉ buổi sáng
     if (slot.session === "AM" && teacher.morningOffDay === slot.day) return "bad";
 
+    // Giới hạn tiết sáng thứ 2
+    if (settings.maxMondayMorningPeriods && slot.day === 1 && slot.session === "AM" && slot.period > settings.maxMondayMorningPeriods) {
+      return "bad";
+    }
+
     const slotK = `${slot.day}-${slot.session}-${slot.period}`;
     if (teacherBusy.get(slotK)?.has(req.teacherId)) return "bad";
     if (classBusy.get(slotK)?.has(req.classId)) return "bad";
@@ -168,13 +173,25 @@ function generateScheduleSingle(ctx: Ctx): ScheduleResult {
   const unplacedMap = new Map<ID, number>();
 
   for (const req of requests) {
-    // Ưu tiên slot có period thấp (để không tạo khoảng trống ở đầu buổi)
-    const shuffled = shuffle(slots).sort((a, b) => a.period - b.period);
+    // Sắp xếp slot theo mức độ ưu tiên
+    let prioritizedSlots = shuffle(slots);
+    if (settings.fillMorningFirst && settings.targetMorningPeriods) {
+      const target = settings.targetMorningPeriods;
+      prioritizedSlots.sort((a, b) => {
+        const priorityA = a.session === "AM" && a.period <= target ? 1 : a.session === "PM" ? 2 : 3;
+        const priorityB = b.session === "AM" && b.period <= target ? 1 : b.session === "PM" ? 2 : 3;
+        if (priorityA !== priorityB) return priorityA - priorityB;
+        return a.period - b.period; // Cùng nhóm thì ưu tiên period thấp để tránh khoảng trống
+      });
+    } else {
+      prioritizedSlots.sort((a, b) => a.period - b.period);
+    }
+    
     // pass 1: hard-ok only
     let placed = false;
     const okSlots: Slot[] = [];
     const softSlots: Slot[] = [];
-    for (const s of shuffled) {
+    for (const s of prioritizedSlots) {
       const v = isValid(req, s);
       if (v === "ok") okSlots.push(s);
       else if (v === "soft") softSlots.push(s);

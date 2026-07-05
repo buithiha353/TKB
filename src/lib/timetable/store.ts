@@ -72,6 +72,9 @@ const defaultSettings: Settings = {
   ruleSingleSitePerSession: true,
   ruleAllowDouble: true,
   ruleMaxSameSubjectPerDay: 2,
+  targetMorningPeriods: 4,
+  fillMorningFirst: true,
+  maxMondayMorningPeriods: 4,
 };
 
 function initial() {

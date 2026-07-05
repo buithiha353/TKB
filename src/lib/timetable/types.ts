@@ -49,6 +49,9 @@ export interface Settings {
   ruleSingleSitePerSession?: boolean; // GV chỉ ở 1 điểm trường/buổi
   ruleAllowDouble?: boolean; // cho phép 2 tiết cùng môn liên tiếp (Văn/Toán)
   ruleMaxSameSubjectPerDay?: 1 | 2; // tối đa tiết cùng môn/ngày/lớp
+  targetMorningPeriods?: number;
+  fillMorningFirst?: boolean;
+  maxMondayMorningPeriods?: number;
 }
 
 // key: `${day}-${session}-${period}-${classId}`

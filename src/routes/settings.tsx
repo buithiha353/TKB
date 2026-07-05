@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useStore } from "@/lib/timetable/store";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
@@ -78,6 +79,42 @@ function SettingsPage() {
                 />
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="text-base">Quy tắc phân bổ tiết học</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label>Ưu tiên xếp kín buổi sáng</Label>
+                <p className="text-xs text-muted-foreground">Xếp đủ số tiết mục tiêu buổi sáng trước khi xếp sang chiều</p>
+              </div>
+              <Switch
+                checked={settings.fillMorningFirst}
+                onCheckedChange={(v) => setSettings({ fillMorningFirst: v })}
+              />
+            </div>
+            {settings.fillMorningFirst && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs">Số tiết mục tiêu buổi sáng</Label>
+                  <Input
+                    type="number" min={1} max={5}
+                    value={settings.targetMorningPeriods === 0 ? "" : settings.targetMorningPeriods}
+                    onChange={(e) => setSettings({ targetMorningPeriods: Number(e.target.value) })}
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">Tối đa tiết sáng thứ 2</Label>
+                  <Input
+                    type="number" min={1} max={5}
+                    value={settings.maxMondayMorningPeriods === 0 ? "" : settings.maxMondayMorningPeriods}
+                    onChange={(e) => setSettings({ maxMondayMorningPeriods: Number(e.target.value) })}
+                  />
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
