@@ -176,7 +176,7 @@ function TimetablePage() {
     const need = assignments.filter((a) => a.classId === selectedClass);
     return need.map((a) => {
       const placed = Object.values(timetable).filter(
-        (l) => l.classId === selectedClass && l.subjectId === a.subjectId,
+        (l) => l.classId === selectedClass && l.subjectId === a.subjectId && l.teacherId === a.teacherId,
       ).length;
       return {
         subject: subjectMap.get(a.subjectId)!,
