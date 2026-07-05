@@ -13,7 +13,7 @@ https://github.com/buithiha353/TKB
 Endpoint manifest đang cấu hình trong `src-tauri/tauri.conf.json`:
 
 ```text
-https://cdn.jsdelivr.net/gh/buithiha353/TKB@main/updates/latest.json
+https://raw.githubusercontent.com/buithiha353/TKB/main/updates/latest.json
 ```
 
 Installer và file `.sig` nên lưu trong GitHub Releases của repo này.

@@ -5,7 +5,7 @@ Thư mục này chứa manifest public để Tauri updater kiểm tra bản cậ
 Endpoint đang dùng trong `src-tauri/tauri.conf.json`:
 
 ```text
-https://cdn.jsdelivr.net/gh/buithiha353/TKB@main/updates/latest.json
+https://raw.githubusercontent.com/buithiha353/TKB/main/updates/latest.json
 ```
 
 ## Khi Có Bản Desktop Mới
