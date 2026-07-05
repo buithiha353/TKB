@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0",
-  "notes": "Phiên bản desktop đầu tiên. Khi phát hành bản mới, thay version, notes, signature và url trong file này.",
-  "pub_date": "2026-07-05T00:00:00Z",
+  "version": "0.2.0",
+  "notes": "Bản desktop chuẩn hoá updater qua GitHub Actions, dùng manifest jsDelivr và GitHub Releases.",
+  "pub_date": "2026-07-05T08:56:59Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRKy9PTmNTOGo0c2tZbnZ5KzU3TzVSU0l6NERLdTl2dUFMUG85aERvYVFjYW94d21sY3oyRTR1Vk1mSlBHWmZMelFLelFvd256Rm5oUGFVV0dzKzVqWDBOTkEzd3duM1EwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzMjM5MjUyCWZpbGU6VEtCIFRIQ1NfMC4xLjBfeDY0LXNldHVwLmV4ZQpGUjhlTGV4MHk2YzdaR2d5YUNZelUydk9sUXRNYk9Zd1BrVHFZWklFS1BWNVA3UTUvamFKSEMySVFscVpQSUE0VFJubWtqUVp0WGp3Y0o5cjljemZDdz09Cg==",
-      "url": "https://github.com/buithiha353/TKB/releases/download/v0.1.0/TKB.THCS_0.1.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRKy9PTmNTOGo0c2kzZ3BQMWZvV3hOOE1VVWlNdXYxd0k0eU9NS21zRlB2YzMwb0llRWhFQXJkakFaWW5jQUdGNVU0SzFuZHJRcVVTQnoraWhaOFJsYWEvMmNxUGdBTkFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzMjQxODE4CWZpbGU6VEtCIFRIQ1NfMC4yLjBfeDY0LXNldHVwLmV4ZQpCNitGeDc1eUdsS0FQNVBra0Y3azVsZ0E3TTJ4Q1pHaVhyMkRvTHdGMHJOZjlBZlRFVkRYeVJRVE5PWFdXbzJQUEw3Ris5bmpoelNROW50OThYQmhEZz09Cg==",
+      "url": "https://github.com/buithiha353/TKB/releases/download/v0.2.0/TKB.THCS_0.2.0_x64-setup.exe"
     }
   }
 }
