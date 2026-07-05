@@ -1,96 +1,660 @@
-import type {
-  Assignment,
-  School,
-  SchoolClass,
-  Subject,
-  Teacher,
-} from "./types";
-
-const uid = (p: string, i: number | string) => `${p}_${i}`;
+import type { Assignment, School, SchoolClass, Subject, Teacher } from './types';
 
 export const seedSchools: School[] = [
-  { id: "sch_a", name: "Điểm trường A (Chính)" },
-  { id: "sch_b", name: "Điểm trường B (Lẻ)" },
+  {
+    "name": "Điểm A",
+    "id": "qoagfnop"
+  },
+  {
+    "name": "Điểm B",
+    "id": "ximosi8q"
+  }
 ];
 
 export const seedClasses: SchoolClass[] = [
-  { id: "cls_6a", name: "6A", grade: 6, schoolId: "sch_a" },
-  { id: "cls_6b", name: "6B", grade: 6, schoolId: "sch_b" },
-  { id: "cls_7a", name: "7A", grade: 7, schoolId: "sch_a" },
-  { id: "cls_7b", name: "7B", grade: 7, schoolId: "sch_b" },
-  { id: "cls_8a", name: "8A", grade: 8, schoolId: "sch_a" },
-  { id: "cls_8b", name: "8B", grade: 8, schoolId: "sch_a" },
-  { id: "cls_9a", name: "9A", grade: 9, schoolId: "sch_a" },
-  { id: "cls_9b", name: "9B", grade: 9, schoolId: "sch_b" },
+  {
+    "name": "6A",
+    "grade": 6,
+    "schoolId": "qoagfnop",
+    "id": "swrq9p83"
+  },
+  {
+    "name": "6B",
+    "grade": 6,
+    "schoolId": "qoagfnop",
+    "id": "sdm696fc"
+  },
+  {
+    "name": "6C",
+    "grade": 6,
+    "schoolId": "qoagfnop",
+    "id": "l93bg6m8"
+  },
+  {
+    "name": "6D",
+    "grade": 6,
+    "schoolId": "qoagfnop",
+    "id": "4cthjf6n"
+  },
+  {
+    "name": "6E",
+    "grade": 6,
+    "schoolId": "qoagfnop",
+    "id": "66vs3y3d"
+  },
+  {
+    "name": "6G",
+    "grade": 6,
+    "schoolId": "ximosi8q",
+    "id": "tmy74ou5"
+  },
+  {
+    "name": "6H",
+    "grade": 6,
+    "schoolId": "ximosi8q",
+    "id": "upjxnm1i"
+  },
+  {
+    "name": "6K",
+    "grade": 6,
+    "schoolId": "ximosi8q",
+    "id": "wzka2w8s"
+  },
+  {
+    "name": "7A",
+    "grade": 7,
+    "schoolId": "qoagfnop",
+    "id": "oelx4m0i"
+  },
+  {
+    "name": "7B",
+    "grade": 7,
+    "schoolId": "qoagfnop",
+    "id": "36ifofhw"
+  },
+  {
+    "name": "7C",
+    "grade": 7,
+    "schoolId": "qoagfnop",
+    "id": "0aq7bqeq"
+  },
+  {
+    "name": "7D",
+    "grade": 7,
+    "schoolId": "qoagfnop",
+    "id": "2axdl26g"
+  },
+  {
+    "name": "7E",
+    "grade": 7,
+    "schoolId": "qoagfnop",
+    "id": "xw25e5k9"
+  },
+  {
+    "name": "7G",
+    "grade": 7,
+    "schoolId": "ximosi8q",
+    "id": "lr547lww"
+  },
+  {
+    "name": "7H",
+    "grade": 7,
+    "schoolId": "ximosi8q",
+    "id": "lvaom9sn"
+  },
+  {
+    "name": "7K",
+    "grade": 7,
+    "schoolId": "ximosi8q",
+    "id": "8k9yypid"
+  },
+  {
+    "name": "8A",
+    "grade": 8,
+    "schoolId": "qoagfnop",
+    "id": "iv27x16k"
+  },
+  {
+    "name": "8B",
+    "grade": 8,
+    "schoolId": "qoagfnop",
+    "id": "z833mxr9"
+  },
+  {
+    "name": "8C",
+    "grade": 8,
+    "schoolId": "qoagfnop",
+    "id": "93eg08o0"
+  },
+  {
+    "name": "8D",
+    "grade": 8,
+    "schoolId": "qoagfnop",
+    "id": "868n6uuf"
+  },
+  {
+    "name": "8E",
+    "grade": 8,
+    "schoolId": "qoagfnop",
+    "id": "vddduolq"
+  },
+  {
+    "name": "8G",
+    "grade": 8,
+    "schoolId": "ximosi8q",
+    "id": "en8ovo5a"
+  },
+  {
+    "name": "8H",
+    "grade": 8,
+    "schoolId": "ximosi8q",
+    "id": "e1fp8lus"
+  },
+  {
+    "name": "8K",
+    "grade": 8,
+    "schoolId": "ximosi8q",
+    "id": "6dqsd63v"
+  },
+  {
+    "name": "9A",
+    "grade": 9,
+    "schoolId": "qoagfnop",
+    "id": "6w986ezr"
+  },
+  {
+    "name": "9B",
+    "grade": 9,
+    "schoolId": "qoagfnop",
+    "id": "a5sc3j42"
+  },
+  {
+    "name": "9C",
+    "grade": 9,
+    "schoolId": "qoagfnop",
+    "id": "c86uoscs"
+  },
+  {
+    "name": "9D",
+    "grade": 9,
+    "schoolId": "qoagfnop",
+    "id": "rcvxsv5g"
+  },
+  {
+    "name": "9E",
+    "grade": 9,
+    "schoolId": "qoagfnop",
+    "id": "nd7d2hak"
+  },
+  {
+    "name": "9G",
+    "grade": 9,
+    "schoolId": "ximosi8q",
+    "id": "08j7wb5a"
+  },
+  {
+    "name": "9H",
+    "grade": 9,
+    "schoolId": "ximosi8q",
+    "id": "x7bxqk8r"
+  },
+  {
+    "name": "9K",
+    "grade": 9,
+    "schoolId": "ximosi8q",
+    "id": "q5vcf6ko"
+  }
 ];
 
-// Theo Thông tư 32/2018 – chương trình GDPT 2018 cấp THCS
 export const seedSubjects: Subject[] = [
-  { id: "sub_van", name: "Ngữ văn", shortName: "Văn", defaultPeriods: 4, canDouble: true },
-  { id: "sub_toan", name: "Toán", shortName: "Toán", defaultPeriods: 4, canDouble: true },
-  { id: "sub_anh", name: "Tiếng Anh", shortName: "Anh", defaultPeriods: 3, canDouble: false },
-  { id: "sub_khtn", name: "Khoa học tự nhiên", shortName: "KHTN", defaultPeriods: 4, canDouble: false },
-  { id: "sub_lsdl", name: "Lịch sử và Địa lí", shortName: "LS&ĐL", defaultPeriods: 3, canDouble: false },
-  { id: "sub_gdcd", name: "Giáo dục công dân", shortName: "GDCD", defaultPeriods: 1, canDouble: false },
-  { id: "sub_cn", name: "Công nghệ", shortName: "CN", defaultPeriods: 1, canDouble: false },
-  { id: "sub_th", name: "Tin học", shortName: "Tin", defaultPeriods: 1, canDouble: false },
-  { id: "sub_gdtc", name: "Giáo dục thể chất", shortName: "GDTC", defaultPeriods: 2, canDouble: false },
-  { id: "sub_nt", name: "Nghệ thuật", shortName: "NT", defaultPeriods: 2, canDouble: false },
-  { id: "sub_htn", name: "HĐTN - HN", shortName: "HĐTN", defaultPeriods: 3, canDouble: false },
-  { id: "sub_ddp", name: "Nội dung địa phương", shortName: "GDĐP", defaultPeriods: 1, canDouble: false },
+  {
+    "id": "sub_van",
+    "name": "Ngữ văn",
+    "shortName": "Văn",
+    "defaultPeriods": 4,
+    "canDouble": true
+  },
+  {
+    "id": "sub_toan",
+    "name": "Toán",
+    "shortName": "Toán",
+    "defaultPeriods": 4,
+    "canDouble": true
+  },
+  {
+    "id": "sub_anh",
+    "name": "Tiếng Anh",
+    "shortName": "Anh",
+    "defaultPeriods": 3,
+    "canDouble": false
+  },
+  {
+    "id": "sub_khtn",
+    "name": "Khoa học tự nhiên",
+    "shortName": "KHTN",
+    "defaultPeriods": 4,
+    "canDouble": false
+  },
+  {
+    "id": "sub_lsdl",
+    "name": "Lịch sử và Địa lí",
+    "shortName": "LS&ĐL",
+    "defaultPeriods": 3,
+    "canDouble": false
+  },
+  {
+    "id": "sub_gdcd",
+    "name": "Giáo dục công dân",
+    "shortName": "GDCD",
+    "defaultPeriods": 1,
+    "canDouble": false
+  },
+  {
+    "id": "sub_cn",
+    "name": "Công nghệ",
+    "shortName": "CN",
+    "defaultPeriods": 1,
+    "canDouble": false
+  },
+  {
+    "id": "sub_th",
+    "name": "Tin học",
+    "shortName": "Tin",
+    "defaultPeriods": 1,
+    "canDouble": false
+  },
+  {
+    "id": "sub_gdtc",
+    "name": "Giáo dục thể chất",
+    "shortName": "GDTC",
+    "defaultPeriods": 2,
+    "canDouble": false
+  },
+  {
+    "id": "sub_nt",
+    "name": "Nghệ thuật",
+    "shortName": "NT",
+    "defaultPeriods": 2,
+    "canDouble": false
+  },
+  {
+    "id": "sub_htn",
+    "name": "HĐTN - HN",
+    "shortName": "HĐTN",
+    "defaultPeriods": 3,
+    "canDouble": false
+  },
+  {
+    "id": "sub_ddp",
+    "name": "Nội dung địa phương",
+    "shortName": "GDĐP",
+    "defaultPeriods": 1,
+    "canDouble": false
+  }
 ];
 
 export const seedTeachers: Teacher[] = [
-  { id: "t_van1", name: "Nguyễn Thị An", subjectIds: ["sub_van"], primarySchoolId: "sch_a", morningOffDay: 4 },
-  { id: "t_van2", name: "Trần Thị Bình", subjectIds: ["sub_van"], primarySchoolId: "sch_b", secondarySchoolId: "sch_a", morningOffDay: 5 },
-  { id: "t_toan1", name: "Lê Văn Cường", subjectIds: ["sub_toan"], primarySchoolId: "sch_a", morningOffDay: 3 },
-  { id: "t_toan2", name: "Phạm Thị Dung", subjectIds: ["sub_toan"], primarySchoolId: "sch_a", secondarySchoolId: "sch_b", morningOffDay: 2 },
-  { id: "t_anh1", name: "Hoàng Văn Em", subjectIds: ["sub_anh"], primarySchoolId: "sch_a", morningOffDay: 5 },
-  { id: "t_anh2", name: "Vũ Thị Phương", subjectIds: ["sub_anh"], primarySchoolId: "sch_b", secondarySchoolId: "sch_a", morningOffDay: 4 },
-  { id: "t_khtn1", name: "Đặng Văn Giang", subjectIds: ["sub_khtn"], primarySchoolId: "sch_a", morningOffDay: 2 },
-  { id: "t_khtn2", name: "Bùi Thị Hà", subjectIds: ["sub_khtn"], primarySchoolId: "sch_a", secondarySchoolId: "sch_b", morningOffDay: 3 },
-  { id: "t_lsdl1", name: "Ngô Thị Inh", subjectIds: ["sub_lsdl", "sub_gdcd"], primarySchoolId: "sch_a", morningOffDay: 5 },
-  { id: "t_lsdl2", name: "Đỗ Văn Khoa", subjectIds: ["sub_lsdl", "sub_ddp"], primarySchoolId: "sch_b", secondarySchoolId: "sch_a", morningOffDay: 3 },
-  { id: "t_cn", name: "Lý Thị Lan", subjectIds: ["sub_cn", "sub_th"], primarySchoolId: "sch_a", secondarySchoolId: "sch_b", morningOffDay: 4 },
-  { id: "t_gdtc", name: "Trịnh Văn Minh", subjectIds: ["sub_gdtc"], primarySchoolId: "sch_a", secondarySchoolId: "sch_b", morningOffDay: 2 },
-  { id: "t_nt", name: "Phan Thị Nga", subjectIds: ["sub_nt"], primarySchoolId: "sch_a", secondarySchoolId: "sch_b", morningOffDay: 5 },
-  { id: "t_htn", name: "Mai Văn Oanh", subjectIds: ["sub_htn"], primarySchoolId: "sch_a", secondarySchoolId: "sch_b", morningOffDay: 3 },
-  { id: "t_htn2", name: "Cao Thị Phúc", subjectIds: ["sub_htn", "sub_gdcd"], primarySchoolId: "sch_b", morningOffDay: 4 },
+  {
+    "name": "GV1",
+    "subjectIds": [
+      "sub_toan"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": null,
+    "morningOffDay": 1,
+    "id": "e4m9e2rg"
+  },
+  {
+    "name": "GV2",
+    "subjectIds": [
+      "sub_toan"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": null,
+    "morningOffDay": 1,
+    "id": "mwggmdrk"
+  },
+  {
+    "name": "GV3",
+    "subjectIds": [
+      "sub_toan",
+      "sub_khtn"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 2,
+    "id": "ypmz3lx5"
+  },
+  {
+    "name": "GV4",
+    "subjectIds": [
+      "sub_toan",
+      "sub_cn"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 2,
+    "id": "sh1bgt5o"
+  },
+  {
+    "name": "GV5",
+    "subjectIds": [
+      "sub_toan",
+      "sub_th"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 5,
+    "id": "mpeu64t5"
+  },
+  {
+    "name": "GV6",
+    "subjectIds": [
+      "sub_van"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": null,
+    "morningOffDay": 3,
+    "id": "uzaxob71"
+  },
+  {
+    "name": "GV7",
+    "subjectIds": [
+      "sub_van"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": null,
+    "morningOffDay": 4,
+    "id": "s7rmgqgm"
+  },
+  {
+    "name": "GV8",
+    "subjectIds": [
+      "sub_anh"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": null,
+    "morningOffDay": 5,
+    "id": "rpc55kla"
+  },
+  {
+    "name": "GV9",
+    "subjectIds": [
+      "sub_anh"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 4,
+    "id": "ybylflgx"
+  },
+  {
+    "name": "GV10",
+    "subjectIds": [
+      "sub_anh",
+      "sub_htn"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 2,
+    "id": "p79vgsf2"
+  },
+  {
+    "name": "GV11",
+    "subjectIds": [
+      "sub_nt"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": null,
+    "morningOffDay": 2,
+    "id": "lmp0gsg9"
+  },
+  {
+    "name": "GV12",
+    "subjectIds": [
+      "sub_nt"
+    ],
+    "primarySchoolId": "ximosi8q",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 4,
+    "id": "551r02n6"
+  },
+  {
+    "name": "GV13",
+    "subjectIds": [
+      "sub_gdcd",
+      "sub_ddp"
+    ],
+    "primarySchoolId": "ximosi8q",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 4,
+    "id": "u37a163d"
+  },
+  {
+    "name": "GV13",
+    "subjectIds": [
+      "sub_gdtc"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 5,
+    "id": "puc9wjt4"
+  },
+  {
+    "name": "GV15",
+    "subjectIds": [
+      "sub_th"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 3,
+    "id": "y85qo3qy"
+  },
+  {
+    "name": "Gv16",
+    "subjectIds": [
+      "sub_khtn"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 1,
+    "id": "gs4ipyh7"
+  },
+  {
+    "name": "GV17",
+    "subjectIds": [
+      "sub_lsdl",
+      "sub_ddp"
+    ],
+    "primarySchoolId": "qoagfnop",
+    "secondarySchoolId": "ximosi8q",
+    "morningOffDay": 4,
+    "id": "ejx50a7e"
+  }
 ];
 
-// Phân công dạy: mỗi (lớp × môn) → 1 GV. Sinh tự động theo seed.
 export function seedAssignments(): Assignment[] {
-  const assignments: Assignment[] = [];
-  const teachersBySubject: Record<string, string[]> = {};
-  for (const t of seedTeachers) {
-    for (const s of t.subjectIds) {
-      (teachersBySubject[s] ||= []).push(t.id);
+  return [
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_van",
+      "teacherId": "uzaxob71",
+      "periods": 4,
+      "id": "owj7el1t"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_toan",
+      "teacherId": "e4m9e2rg",
+      "periods": 2,
+      "id": "ctbrn6jj"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_anh",
+      "teacherId": "rpc55kla",
+      "periods": 3,
+      "id": "ogo9wqw2"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "fv96z3ff"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_lsdl",
+      "teacherId": "ejx50a7e",
+      "periods": 2,
+      "id": "rjxwchlt"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_khtn",
+      "teacherId": "gs4ipyh7",
+      "periods": 2,
+      "id": "3kutey55"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_gdcd",
+      "teacherId": "u37a163d",
+      "periods": 1,
+      "id": "3ujmuh20"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_cn",
+      "teacherId": "sh1bgt5o",
+      "periods": 1,
+      "id": "2363b0cf"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_th",
+      "teacherId": "mpeu64t5",
+      "periods": 1,
+      "id": "nec2szut"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_gdtc",
+      "teacherId": "puc9wjt4",
+      "periods": 1,
+      "id": "jxf9wa5g"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_nt",
+      "teacherId": "lmp0gsg9",
+      "periods": 1,
+      "id": "etu20u69"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_nt",
+      "teacherId": "551r02n6",
+      "periods": 1,
+      "id": "0xtyhj4b"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_htn",
+      "teacherId": "p79vgsf2",
+      "periods": 1,
+      "id": "dlpco0t6"
+    },
+    {
+      "classId": "swrq9p83",
+      "subjectId": "sub_ddp",
+      "teacherId": "ejx50a7e",
+      "periods": 1,
+      "id": "pg4lnqmy"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_van",
+      "teacherId": "s7rmgqgm",
+      "periods": 4,
+      "id": "2220s252"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_toan",
+      "teacherId": "mwggmdrk",
+      "periods": 4,
+      "id": "zbbpt44l"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_anh",
+      "teacherId": "p79vgsf2",
+      "periods": 3,
+      "id": "exacprs8"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_khtn",
+      "teacherId": "gs4ipyh7",
+      "periods": 2,
+      "id": "7815ckck"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "mzq82lj8"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_lsdl",
+      "teacherId": "ejx50a7e",
+      "periods": 2,
+      "id": "cmxlyk18"
+    },
+    {
+      "classId": "sdm696fc",
+      "subjectId": "sub_gdcd",
+      "teacherId": "u37a163d",
+      "periods": 2,
+      "id": "voxu9ybw"
+    },
+    {
+      "classId": "l93bg6m8",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "jog3tje2"
+    },
+    {
+      "classId": "4cthjf6n",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "veurejab"
+    },
+    {
+      "classId": "66vs3y3d",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "6krcuud3"
+    },
+    {
+      "classId": "tmy74ou5",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "js094xet"
+    },
+    {
+      "classId": "upjxnm1i",
+      "subjectId": "sub_khtn",
+      "teacherId": "ypmz3lx5",
+      "periods": 2,
+      "id": "bq0anibu"
     }
-  }
-  let counter = 0;
-  for (const cls of seedClasses) {
-    for (const sub of seedSubjects) {
-      const pool = teachersBySubject[sub.id] || [];
-      if (!pool.length) continue;
-      // ưu tiên GV có điểm trường trùng
-      const preferred =
-        pool.find((tid) => {
-          const t = seedTeachers.find((x) => x.id === tid)!;
-          return t.primarySchoolId === cls.schoolId;
-        }) ||
-        pool.find((tid) => {
-          const t = seedTeachers.find((x) => x.id === tid)!;
-          return t.secondarySchoolId === cls.schoolId;
-        }) ||
-        pool[counter % pool.length];
-      assignments.push({
-        id: uid("a", counter++),
-        classId: cls.id,
-        subjectId: sub.id,
-        teacherId: preferred,
-        periods: sub.defaultPeriods,
-      });
-    }
-  }
-  return assignments;
+  ];
 }
