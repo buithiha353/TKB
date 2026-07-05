@@ -10,6 +10,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useStore } from "@/lib/timetable/store";
 import { DAY_NAMES, slotKey } from "@/lib/timetable/types";
 import type { Lesson, Session, Subject, Teacher, SchoolClass } from "@/lib/timetable/types";
@@ -26,8 +34,9 @@ import {
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Trash2, Printer, AlertTriangle, CheckCircle } from "lucide-react";
+import { Sparkles, Trash2, Printer, AlertTriangle, CheckCircle, FileSpreadsheet, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { exportTimetableToExcel } from "@/lib/timetable/exportExcel";
 
 export const Route = createFileRoute("/timetable")({
   component: TimetablePage,
@@ -54,6 +63,23 @@ function TimetablePage() {
   const [selectedTeacher, setSelectedTeacher] = useState(teachers[0]?.id || "");
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  const handleExportExcel = async () => {
+    try {
+      await exportTimetableToExcel({
+        schools: store.schools,
+        classes: store.classes,
+        subjects: store.subjects,
+        teachers: store.teachers,
+        timetable: store.timetable,
+        settings: store.settings,
+      });
+      toast.success("Đã tải xuống file Excel!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Lỗi khi tạo file Excel");
+    }
+  };
 
   const handleGenerate = () => {
     const res = generateSchedule({
@@ -285,9 +311,28 @@ function TimetablePage() {
           <Button onClick={handleGenerate}>
             <Sparkles className="mr-2 h-4 w-4" /> Sinh TKB tự động
           </Button>
-          <Button variant="outline" onClick={() => window.print()}>
-            <Printer className="mr-2 h-4 w-4" /> In
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <Printer className="mr-2 h-4 w-4" /> In TKB
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Tùy chọn in</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => window.print()}>
+                <Printer className="mr-2 h-4 w-4" /> In trang hiện tại
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportExcel}>
+                <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" /> Xuất Excel (Toàn trường)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open('/print-all', '_blank')}>
+                <FileText className="mr-2 h-4 w-4 text-red-600" /> In PDF (Toàn trường)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button
             variant="ghost"
             onClick={() => {
