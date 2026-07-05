@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,9 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useStore } from "@/lib/timetable/store";
-import { Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/assignments")({
   component: AssignmentsPage,
@@ -27,20 +26,11 @@ function AssignmentsPage() {
     classes,
     subjects,
     teachers,
-    schools,
-    addAssignment,
     updateAssignment,
-    removeAssignment,
   } = useStore();
 
   const initialClassId = classes[0]?.id || "";
   const [filterClass, setFilterClass] = useState<string>(initialClassId || "all");
-  const [nw, setNw] = useState({
-    classId: initialClassId,
-    subjectId: subjects[0]?.id || "",
-    teacherId: teachers[0]?.id || "",
-    periods: 2,
-  });
 
   const filtered = useMemo(
     () => (filterClass === "all" ? assignments : assignments.filter((a) => a.classId === filterClass)),
@@ -50,144 +40,113 @@ function AssignmentsPage() {
   return (
     <AppLayout>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Phân công dạy</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Cấu hình Số tiết</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Mỗi (lớp × môn) được gán cho 1 giáo viên và số tiết/tuần.
+          Giáo viên được phân công tự động từ mục <b>Giáo viên</b>. Tại đây, bạn tuỳ chỉnh chính xác số tiết <b>Sáng</b> và <b>Chiều</b> cho từng môn.
         </p>
       </div>
 
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle className="text-base">Thêm phân công</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3 md:grid-cols-5">
-          <div>
-            <Label>Lớp</Label>
-            <Select value={nw.classId} onValueChange={(v) => { setNw({ ...nw, classId: v }); setFilterClass(v); }}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {classes.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Môn</Label>
-            <Select value={nw.subjectId} onValueChange={(v) => setNw({ ...nw, subjectId: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {subjects.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="md:col-span-2">
-            <Label>Giáo viên</Label>
-            <Select value={nw.teacherId} onValueChange={(v) => setNw({ ...nw, teacherId: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {teachers
-                  .filter((t) => t.subjectIds.includes(nw.subjectId))
-                  .map((t) => (
-                    <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Tiết/tuần</Label>
-            <div className="flex gap-2">
-              <Input
-                type="number"
-                min={0}
-                value={nw.periods === 0 ? "" : nw.periods}
-                onChange={(e) => setNw({ ...nw, periods: Number(e.target.value) })}
-              />
-              <Button
-                onClick={() => {
-                  if (!nw.classId || !nw.subjectId || !nw.teacherId) {
-                    toast.error("Điền đầy đủ"); return;
-                  }
-                  if (assignments.some((a) => a.classId === nw.classId && a.subjectId === nw.subjectId && a.teacherId === nw.teacherId)) {
-                    toast.error("Giáo viên này đã được phân công môn này cho lớp này"); return;
-                  }
-                  addAssignment(nw);
-                }}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="mb-3 flex items-center gap-3">
-        <Label className="text-sm">Lọc theo lớp:</Label>
-        <Select value={filterClass} onValueChange={(v) => { setFilterClass(v); if (v !== "all") setNw({ ...nw, classId: v }); }}>
-          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+      <div className="mb-4 flex items-center gap-3">
+        <Label className="text-sm font-medium">Chọn lớp:</Label>
+        <Select value={filterClass} onValueChange={setFilterClass}>
+          <SelectTrigger className="w-48 bg-white"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="all">Tất cả các lớp</SelectItem>
             {classes.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+              <SelectItem key={c.id} value={c.id}>Lớp {c.name}</SelectItem>
             ))}
           </SelectContent>
         </Select>
         <span className="text-sm text-muted-foreground">{filtered.length} phân công</span>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
-          <div className="grid grid-cols-12 gap-2 border-b bg-muted/50 px-4 py-2 text-xs font-medium uppercase text-muted-foreground">
-            <div className="col-span-2">Lớp</div>
-            <div className="col-span-3">Môn</div>
-            <div className="col-span-5">Giáo viên</div>
-            <div className="col-span-1">Tiết</div>
-            <div className="col-span-1"></div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50 text-muted-foreground">
+                <tr>
+                  {filterClass === "all" && <th className="p-3 font-medium text-left">Lớp</th>}
+                  <th className="p-3 font-medium text-left">Môn học</th>
+                  <th className="p-3 font-medium text-left">Giáo viên phụ trách</th>
+                  <th className="p-3 font-medium text-center w-[120px]">Tiết Sáng</th>
+                  <th className="p-3 font-medium text-center w-[120px]">Tiết Chiều</th>
+                  <th className="p-3 font-medium text-center w-[120px]">Tổng</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {filtered.map((a) => {
+                  const cls = classes.find((c) => c.id === a.classId);
+                  const sub = subjects.find((s) => s.id === a.subjectId);
+                  const teacher = teachers.find((t) => t.id === a.teacherId);
+                  const morning = a.morningPeriods || 0;
+                  const afternoon = a.afternoonPeriods || 0;
+                  const total = morning + afternoon;
+
+                  const subTotal = filtered
+                    .filter(x => x.classId === a.classId && x.subjectId === a.subjectId)
+                    .reduce((acc, curr) => acc + (curr.morningPeriods || 0) + (curr.afternoonPeriods || 0), 0);
+                  const expectedTotal = sub?.defaultPeriods || 0;
+                  const isMismatch = subTotal !== expectedTotal;
+
+                  return (
+                    <tr key={a.id} className="hover:bg-muted/20">
+                      {filterClass === "all" && (
+                        <td className="p-3 font-medium">{cls?.name}</td>
+                      )}
+                      <td className="p-3">{sub?.name}</td>
+                      <td className="p-3">
+                        {teacher ? (
+                          <Badge variant="outline" className="font-normal bg-blue-50/50 text-blue-700 border-blue-200">
+                            {teacher.name}
+                          </Badge>
+                        ) : (
+                          <span className="text-destructive">Chưa phân công</span>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <Input
+                          type="number"
+                          min={0}
+                          className="h-8 text-center"
+                          value={morning === 0 ? "" : morning}
+                          onChange={(e) => updateAssignment(a.id, { morningPeriods: Number(e.target.value) })}
+                        />
+                      </td>
+                      <td className="p-3">
+                        <Input
+                          type="number"
+                          min={0}
+                          className="h-8 text-center"
+                          value={afternoon === 0 ? "" : afternoon}
+                          onChange={(e) => updateAssignment(a.id, { afternoonPeriods: Number(e.target.value) })}
+                        />
+                      </td>
+                      <td className={cn(
+                        "p-3 text-center font-mono",
+                        isMismatch ? "text-red-600 font-bold" : "text-muted-foreground"
+                      )}>
+                        {total}
+                        {isMismatch && (
+                          <span className="block text-xs font-sans font-normal opacity-80 mt-1">
+                            (Tổng môn: {subTotal}/{expectedTotal})
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                      Lớp này chưa được phân công giáo viên nào.<br/>
+                      Vui lòng sang mục <b>Giáo viên</b> để đánh dấu lớp dạy.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-          {filtered.map((a) => {
-            const cls = classes.find((c) => c.id === a.classId);
-            const sub = subjects.find((s) => s.id === a.subjectId);
-            const sch = schools.find((s) => s.id === cls?.schoolId);
-            const eligible = teachers.filter((t) => t.subjectIds.includes(a.subjectId));
-            return (
-              <div key={a.id} className="grid grid-cols-12 items-center gap-2 border-b px-4 py-2 text-sm">
-                <div className="col-span-2">
-                  <div className="font-medium">{cls?.name}</div>
-                  <div className="text-xs text-muted-foreground">{sch?.name.split("(")[0].trim()}</div>
-                </div>
-                <div className="col-span-3">{sub?.name}</div>
-                <div className="col-span-5">
-                  <Select
-                    value={a.teacherId}
-                    onValueChange={(v) => updateAssignment(a.id, { teacherId: v })}
-                  >
-                    <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {eligible.map((t) => (
-                        <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="col-span-1">
-                  <Input
-                    type="number"
-                    min={0}
-                    className="h-8"
-                    value={a.periods === 0 ? "" : a.periods}
-                    onChange={(e) => updateAssignment(a.id, { periods: Number(e.target.value) })}
-                  />
-                </div>
-                <div className="col-span-1 flex justify-end">
-                  <Button variant="ghost" size="icon" onClick={() => removeAssignment(a.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
         </CardContent>
       </Card>
     </AppLayout>

@@ -478,182 +478,208 @@ export function seedAssignments(): Assignment[] {
       "classId": "swrq9p83",
       "subjectId": "sub_van",
       "teacherId": "uzaxob71",
-      "periods": 4,
+      "morningPeriods": 4,
+      "afternoonPeriods": 0,
       "id": "owj7el1t"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_toan",
       "teacherId": "e4m9e2rg",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "ctbrn6jj"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_anh",
       "teacherId": "rpc55kla",
-      "periods": 3,
+      "morningPeriods": 3,
+      "afternoonPeriods": 0,
       "id": "ogo9wqw2"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "fv96z3ff"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_lsdl",
       "teacherId": "ejx50a7e",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "rjxwchlt"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_khtn",
       "teacherId": "gs4ipyh7",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "3kutey55"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_gdcd",
       "teacherId": "u37a163d",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "3ujmuh20"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_cn",
       "teacherId": "sh1bgt5o",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "2363b0cf"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_th",
       "teacherId": "mpeu64t5",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "nec2szut"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_gdtc",
       "teacherId": "puc9wjt4",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "jxf9wa5g"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_nt",
       "teacherId": "lmp0gsg9",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "etu20u69"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_nt",
       "teacherId": "551r02n6",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "0xtyhj4b"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_htn",
       "teacherId": "p79vgsf2",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "dlpco0t6"
     },
     {
       "classId": "swrq9p83",
       "subjectId": "sub_ddp",
       "teacherId": "ejx50a7e",
-      "periods": 1,
+      "morningPeriods": 1,
+      "afternoonPeriods": 0,
       "id": "pg4lnqmy"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_van",
       "teacherId": "s7rmgqgm",
-      "periods": 4,
+      "morningPeriods": 4,
+      "afternoonPeriods": 0,
       "id": "2220s252"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_toan",
       "teacherId": "mwggmdrk",
-      "periods": 4,
+      "morningPeriods": 4,
+      "afternoonPeriods": 0,
       "id": "zbbpt44l"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_anh",
       "teacherId": "p79vgsf2",
-      "periods": 3,
+      "morningPeriods": 3,
+      "afternoonPeriods": 0,
       "id": "exacprs8"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_khtn",
       "teacherId": "gs4ipyh7",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "7815ckck"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "mzq82lj8"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_lsdl",
       "teacherId": "ejx50a7e",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "cmxlyk18"
     },
     {
       "classId": "sdm696fc",
       "subjectId": "sub_gdcd",
       "teacherId": "u37a163d",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "voxu9ybw"
     },
     {
       "classId": "l93bg6m8",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "jog3tje2"
     },
     {
       "classId": "4cthjf6n",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "veurejab"
     },
     {
       "classId": "66vs3y3d",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "6krcuud3"
     },
     {
       "classId": "tmy74ou5",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "js094xet"
     },
     {
       "classId": "upjxnm1i",
       "subjectId": "sub_khtn",
       "teacherId": "ypmz3lx5",
-      "periods": 2,
+      "morningPeriods": 2,
+      "afternoonPeriods": 0,
       "id": "bq0anibu"
     }
   ];

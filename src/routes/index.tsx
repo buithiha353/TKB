@@ -24,7 +24,7 @@ function Dashboard() {
   } = useStore();
 
   const totalLessons = Object.keys(timetable).length;
-  const totalNeeded = assignments.reduce((s, a) => s + a.periods, 0);
+  const totalNeeded = assignments.reduce((s, a) => s + (a.morningPeriods || 0) + (a.afternoonPeriods || 0), 0);
 
   const handleGenerate = () => {
     const t0 = performance.now();

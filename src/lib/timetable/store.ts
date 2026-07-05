@@ -177,7 +177,8 @@ export const useStore = create<State>()(
                   teacherId,
                   classId: cid,
                   subjectId: sid,
-                  periods: sub.defaultPeriods,
+                  morningPeriods: sub.defaultPeriods,
+                  afternoonPeriods: 0,
                 });
               }
             }
@@ -213,7 +214,14 @@ export const useStore = create<State>()(
             classes: data.classes || [],
             subjects: data.subjects || [],
             teachers: data.teachers || [],
-            assignments: data.assignments || [],
+            assignments: (data.assignments || []).map((a: any) => {
+              if (a.periods !== undefined) {
+                a.morningPeriods = a.periods;
+                a.afternoonPeriods = 0;
+                delete a.periods;
+              }
+              return a;
+            }),
             timetable: data.timetable || {},
           });
           return true;
@@ -223,6 +231,22 @@ export const useStore = create<State>()(
       },
       resetAll: () => set(initial()),
     }),
-    { name: "tkb-thcs-v1", version: 2 },
+    { 
+      name: "tkb-thcs-v1", 
+      version: 3,
+      migrate: (persistedState: any, version: number) => {
+        if (version < 3 && persistedState.assignments) {
+          persistedState.assignments = persistedState.assignments.map((a: any) => {
+            if (a.periods !== undefined) {
+              a.morningPeriods = a.periods;
+              a.afternoonPeriods = 0;
+              delete a.periods;
+            }
+            return a;
+          });
+        }
+        return persistedState;
+      }
+    },
   ),
 );

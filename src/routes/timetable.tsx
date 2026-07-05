@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStore } from "@/lib/timetable/store";
 import { DAY_NAMES, slotKey } from "@/lib/timetable/types";
 import type { Lesson, Session, Subject, Teacher, SchoolClass } from "@/lib/timetable/types";
-import { generateSchedule, checkConflict } from "@/lib/timetable/scheduler";
+import { generateSchedule, checkConflict, getAllConflicts } from "@/lib/timetable/scheduler";
 import {
   DndContext,
   useDraggable,
@@ -25,7 +25,8 @@ import {
 } from "@dnd-kit/core";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Sparkles, Trash2, Printer, AlertTriangle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Sparkles, Trash2, Printer, AlertTriangle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/timetable")({
@@ -63,12 +64,7 @@ function TimetablePage() {
       assignments,
     });
     setTimetable(res.timetable);
-    if (res.unplaced.length === 0)
-      toast.success(`Đã xếp ${res.totalPlaced}/${res.totalNeeded} tiết`);
-    else
-      toast.warning(
-        `Xếp ${res.totalPlaced}/${res.totalNeeded}. Còn thiếu ${res.totalNeeded - res.totalPlaced} tiết.`,
-      );
+    toast.success("Đã hoàn tất quá trình sinh TKB!");
   };
 
   const periodsList = useMemo(() => {
@@ -143,22 +139,12 @@ function TimetablePage() {
     const ctx = { settings, classes, subjects, teachers, assignments };
     const target = { day: Number(tD), session: tS as Session, period: Number(tP), classId: tClass };
     const err = checkConflict(timetable, ctx, src, target);
-    if (err) {
-      toast.error(err);
-      return;
-    }
-    if (dst) {
-      const err2 = checkConflict(
-        timetable,
-        ctx,
-        dst,
-        { day: Number(fD), session: fS as Session, period: Number(fP), classId: fClass },
-      );
-      if (err2) {
-        toast.error("Không thể hoán đổi: " + err2);
-        return;
-      }
-    }
+    const err2 = dst ? checkConflict(
+      timetable,
+      ctx,
+      dst,
+      { day: Number(fD), session: fS as Session, period: Number(fP), classId: fClass },
+    ) : null;
 
     const next = { ...timetable };
     delete next[fromKey];
@@ -175,17 +161,76 @@ function TimetablePage() {
     if (mode !== "class") return null;
     const need = assignments.filter((a) => a.classId === selectedClass);
     return need.map((a) => {
-      const placed = Object.values(timetable).filter(
-        (l) => l.classId === selectedClass && l.subjectId === a.subjectId && l.teacherId === a.teacherId,
+      const placedMorning = Object.values(timetable).filter(
+        (l) => l.classId === selectedClass && l.subjectId === a.subjectId && l.teacherId === a.teacherId && l.session === "AM",
+      ).length;
+      const placedAfternoon = Object.values(timetable).filter(
+        (l) => l.classId === selectedClass && l.subjectId === a.subjectId && l.teacherId === a.teacherId && l.session === "PM",
       ).length;
       return {
         subject: subjectMap.get(a.subjectId)!,
         teacher: teacherMap.get(a.teacherId),
-        need: a.periods,
-        placed,
+        needMorning: a.morningPeriods || 0,
+        needAfternoon: a.afternoonPeriods || 0,
+        placedMorning,
+        placedAfternoon,
       };
     });
   }, [mode, selectedClass, assignments, timetable, subjectMap, teacherMap]);
+
+  const globalSummary = useMemo(() => {
+    let totalNeeded = 0;
+    const missingByClass = new Map<string, { subject: string; teacher: string; missingMorning: number; missingAfternoon: number }[]>();
+    
+    for (const a of assignments) {
+      const needMorning = a.morningPeriods || 0;
+      const needAfternoon = a.afternoonPeriods || 0;
+      totalNeeded += needMorning + needAfternoon;
+
+      const placedMorning = Object.values(timetable).filter(
+        (l) => l.classId === a.classId && l.subjectId === a.subjectId && l.teacherId === a.teacherId && l.session === "AM"
+      ).length;
+      const placedAfternoon = Object.values(timetable).filter(
+        (l) => l.classId === a.classId && l.subjectId === a.subjectId && l.teacherId === a.teacherId && l.session === "PM"
+      ).length;
+
+      const missingMorning = Math.max(0, needMorning - placedMorning);
+      const missingAfternoon = Math.max(0, needAfternoon - placedAfternoon);
+
+      if (missingMorning > 0 || missingAfternoon > 0) {
+        if (!missingByClass.has(a.classId)) {
+          missingByClass.set(a.classId, []);
+        }
+        missingByClass.get(a.classId)!.push({
+          subject: subjectMap.get(a.subjectId)?.name || "",
+          teacher: teacherMap.get(a.teacherId)?.name || "",
+          missingMorning,
+          missingAfternoon
+        });
+      }
+    }
+    
+    let totalMissing = 0;
+    for (const list of missingByClass.values()) {
+      for (const item of list) {
+        totalMissing += item.missingMorning + item.missingAfternoon;
+      }
+    }
+    
+    return {
+      totalNeeded,
+      totalPlaced: totalNeeded - totalMissing,
+      totalMissing,
+      missingByClass: Array.from(missingByClass.entries()).map(([classId, items]) => ({
+        className: classMap.get(classId)?.name || "",
+        items
+      })).sort((a, b) => a.className.localeCompare(b.className))
+    };
+  }, [assignments, timetable, classMap, subjectMap, teacherMap]);
+
+  const globalConflicts = useMemo(() => {
+    return getAllConflicts(timetable, { settings, classes, subjects, teachers, assignments });
+  }, [timetable, settings, classes, subjects, teachers, assignments]);
 
   const currentTitle =
     mode === "class"
@@ -251,6 +296,55 @@ function TimetablePage() {
         <h2 className="text-lg font-bold">{settings.schoolName} — TKB {currentTitle}</h2>
       </div>
 
+      {Object.keys(timetable).length > 0 && globalConflicts.length > 0 && (
+        <Alert variant="destructive" className="mb-4 print:hidden border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200">
+          <AlertTriangle className="h-4 w-4 !text-red-600 dark:!text-red-500" />
+          <AlertTitle className="font-semibold text-red-800 dark:text-red-300">
+            Phát hiện {globalConflicts.length} lỗi vi phạm quy tắc (do xếp thủ công):
+          </AlertTitle>
+          <AlertDescription className="mt-2 text-sm text-red-800 dark:text-red-300 max-h-48 overflow-y-auto">
+            <ul className="list-disc pl-5 space-y-1">
+              {globalConflicts.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {Object.keys(timetable).length > 0 && globalSummary.totalMissing > 0 && (
+        <Alert variant="destructive" className="mb-4 print:hidden border-amber-500 bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200">
+          <AlertTriangle className="h-4 w-4 !text-amber-600 dark:!text-amber-500" />
+          <AlertTitle className="font-semibold text-amber-800 dark:text-amber-300">
+            Hệ thống không thể xếp đủ tiết ({globalSummary.totalPlaced}/{globalSummary.totalNeeded}). Còn thiếu {globalSummary.totalMissing} tiết:
+          </AlertTitle>
+          <AlertDescription className="mt-2 text-sm text-amber-800 dark:text-amber-300 max-h-48 overflow-y-auto">
+            <ul className="list-disc pl-5 space-y-1">
+              {globalSummary.missingByClass.map((cls) => (
+                <li key={cls.className}>
+                  <strong className="font-semibold">Lớp {cls.className}:</strong>{" "}
+                  {cls.items.map(item => {
+                    const parts = [];
+                    if (item.missingMorning > 0) parts.push(`${item.missingMorning} Sáng`);
+                    if (item.missingAfternoon > 0) parts.push(`${item.missingAfternoon} Chiều`);
+                    return `${item.subject} (Thiếu ${parts.join(", ")})`;
+                  }).join(" • ")}
+                </li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {Object.keys(timetable).length > 0 && globalSummary.totalMissing === 0 && (
+        <Alert className="mb-4 print:hidden border-green-500 bg-green-50 dark:bg-green-950/40 text-green-900 dark:text-green-200">
+          <CheckCircle className="h-4 w-4 !text-green-600 dark:!text-green-500" />
+          <AlertTitle className="font-semibold text-green-800 dark:text-green-300">
+            Thành công! Đã xếp đủ {globalSummary.totalPlaced}/{globalSummary.totalNeeded} tiết.
+          </AlertTitle>
+        </Alert>
+      )}
+
       <Card>
         <CardContent className="p-0">
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -302,26 +396,42 @@ function TimetablePage() {
             <h3 className="mb-3 text-sm font-semibold">Tiến độ xếp môn cho lớp {classMap.get(selectedClass)?.name}</h3>
             <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
               {classSummary.map((r) => {
-                const ok = r.placed === r.need;
-                const over = r.placed > r.need;
+                const okMorning = r.placedMorning === r.needMorning;
+                const okAfternoon = r.placedAfternoon === r.needAfternoon;
+                const ok = okMorning && okAfternoon;
+                const overMorning = r.placedMorning > r.needMorning;
+                const overAfternoon = r.placedAfternoon > r.needAfternoon;
+                const over = overMorning || overAfternoon;
+
                 return (
                   <div key={r.subject.id} className={cn(
-                    "flex items-center justify-between rounded-md border p-2 text-sm",
+                    "flex flex-col gap-1 rounded-md border p-2 text-sm",
                     !ok && "border-amber-400 bg-amber-50 dark:bg-amber-950/20"
                   )}>
-                    <div className="min-w-0">
-                      <div className="truncate font-medium">{r.subject.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">{r.teacher?.name || "—"}</div>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs">
+                    <div className="flex items-center justify-between min-w-0">
+                      <div>
+                        <div className="truncate font-medium">{r.subject.name}</div>
+                        <div className="truncate text-xs text-muted-foreground">{r.teacher?.name || "—"}</div>
+                      </div>
                       {!ok && (
                         <div title={over ? "Thừa tiết (đã xếp vượt quá số tiết được phân công)" : "Thiếu tiết (chưa xếp đủ số tiết được phân công)"}>
                           <AlertTriangle className="h-4 w-4 text-amber-600" />
                         </div>
                       )}
-                      <span className={cn("font-mono", over && "text-destructive")} title="Số tiết đã xếp / Tổng số tiết phân công">
-                        {r.placed}/{r.need}
-                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs mt-1 border-t pt-1 border-border/50">
+                      <div className="flex justify-between w-1/2 pr-2 border-r border-border/50">
+                        <span className="text-muted-foreground">Sáng:</span>
+                        <span className={cn("font-mono", overMorning ? "text-destructive" : (!okMorning && "text-amber-600 font-bold"))}>
+                          {r.placedMorning}/{r.needMorning}
+                        </span>
+                      </div>
+                      <div className="flex justify-between w-1/2 pl-2">
+                        <span className="text-muted-foreground">Chiều:</span>
+                        <span className={cn("font-mono", overAfternoon ? "text-destructive" : (!okAfternoon && "text-amber-600 font-bold"))}>
+                          {r.placedAfternoon}/{r.needAfternoon}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );

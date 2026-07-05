@@ -36,7 +36,8 @@ export interface Assignment {
   classId: ID;
   subjectId: ID;
   teacherId: ID;
-  periods: number; // tiết/tuần
+  morningPeriods: number; // tiết sáng/tuần
+  afternoonPeriods: number; // tiết chiều/tuần
 }
 
 export interface Settings {
