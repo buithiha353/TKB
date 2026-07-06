@@ -21,9 +21,11 @@ interface State {
   assignments: Assignment[];
   timetable: Timetable;
   onboarded: boolean;
+  isActivated: boolean;
 
   setSettings: (s: Partial<Settings>) => void;
   setOnboarded: (v: boolean) => void;
+  setActivated: (v: boolean) => void;
   startFresh: () => void;
 
   addSchool: (s: Omit<School, "id">) => void;
@@ -107,6 +109,7 @@ function initial() {
     assignments: seedAssignments(),
     timetable: {} as Timetable,
     onboarded: false,
+    isActivated: false,
   };
 }
 
@@ -117,6 +120,7 @@ export const useStore = create<State>()(
 
       setSettings: (s) => set((st) => ({ settings: { ...st.settings, ...s } })),
       setOnboarded: (v) => set({ onboarded: v }),
+      setActivated: (v) => set({ isActivated: v }),
       startFresh: () =>
         set({
           schools: [],
@@ -227,13 +231,14 @@ export const useStore = create<State>()(
             teachers: data.teachers || [],
             assignments: (data.assignments || []).map(normalizeAssignment),
             timetable: data.timetable || {},
+            isActivated: get().isActivated, // Preserve activation state during import
           });
           return true;
         } catch {
           return false;
         }
       },
-      resetAll: () => set(initial()),
+      resetAll: () => set({ ...initial(), isActivated: get().isActivated }),
     }),
     {
       name: "tkb-thcs-v1",

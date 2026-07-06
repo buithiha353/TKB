@@ -17,6 +17,7 @@ import { Route as SchoolsRouteImport } from './routes/schools'
 import { Route as PrintAllRouteImport } from './routes/print-all'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
+import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TimetableRoute = TimetableRouteImport.update({
@@ -59,6 +60,11 @@ const AssignmentsRoute = AssignmentsRouteImport.update({
   path: '/assignments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ActivateRoute = ActivateRouteImport.update({
+  id: '/activate',
+  path: '/activate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -67,6 +73,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/assignments': typeof AssignmentsRoute
   '/login': typeof LoginRoute
   '/print-all': typeof PrintAllRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/assignments': typeof AssignmentsRoute
   '/login': typeof LoginRoute
   '/print-all': typeof PrintAllRoute
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/assignments': typeof AssignmentsRoute
   '/login': typeof LoginRoute
   '/print-all': typeof PrintAllRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activate'
     | '/assignments'
     | '/login'
     | '/print-all'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/activate'
     | '/assignments'
     | '/login'
     | '/print-all'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/activate'
     | '/assignments'
     | '/login'
     | '/print-all'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActivateRoute: typeof ActivateRoute
   AssignmentsRoute: typeof AssignmentsRoute
   LoginRoute: typeof LoginRoute
   PrintAllRoute: typeof PrintAllRoute
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssignmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/activate': {
+      id: '/activate'
+      path: '/activate'
+      fullPath: '/activate'
+      preLoaderRoute: typeof ActivateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -217,6 +237,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActivateRoute: ActivateRoute,
   AssignmentsRoute: AssignmentsRoute,
   LoginRoute: LoginRoute,
   PrintAllRoute: PrintAllRoute,

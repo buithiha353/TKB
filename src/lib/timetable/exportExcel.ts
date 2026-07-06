@@ -1,5 +1,5 @@
 import * as ExcelJS from "exceljs";
-import { saveAs } from "file-saver";
+import { saveWorkbookWithDialog } from "./excelFiles";
 import {
   DAY_NAMES,
   Session,
@@ -11,6 +11,8 @@ import {
   Settings,
   slotKey,
 } from "./types";
+
+const defaultExcelFileName = "TKB_Toan_Truong.xlsx";
 
 export async function exportTimetableToExcel({
   schools,
@@ -275,6 +277,5 @@ export async function exportTimetableToExcel({
     ws.getColumn(colGroup2Start + 3 + i).width = 15;
   }
 
-  const buffer = await wb.xlsx.writeBuffer();
-  saveAs(new Blob([buffer]), "TKB_Toan_Truong.xlsx");
+  return saveWorkbookWithDialog(wb, defaultExcelFileName);
 }

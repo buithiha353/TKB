@@ -8,6 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 *.zip
 *.tsbuildinfo
+keys.txt
+generate_keys.cjs
 
 node_modules
 dist

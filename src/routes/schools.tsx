@@ -12,7 +12,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useStore } from "@/lib/timetable/store";
-import { Plus, Trash2 } from "lucide-react";
+import type { School, SchoolClass } from "@/lib/timetable/types";
+import {
+  normalizeLookup,
+  openWorkbookFromUser,
+  readCellText,
+  saveWorkbookWithDialog,
+  styleTemplateHeader,
+} from "@/lib/timetable/excelFiles";
+import { Download, FileUp, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -22,6 +30,8 @@ export const Route = createFileRoute("/schools")({
     meta: [{ title: "Điểm trường & Lớp học – TKB THCS" }],
   }),
 });
+
+const rid = () => Math.random().toString(36).slice(2, 10);
 
 function SchoolsPage() {
   const {
@@ -41,6 +51,83 @@ function SchoolsPage() {
     grade: 6,
     schoolId: schools[0]?.id || "",
   });
+
+  const downloadClassTemplate = async () => {
+    const ExcelJS = await import("exceljs");
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Lop hoc");
+    sheet.columns = [
+      { header: "Tên lớp", key: "name", width: 18 },
+      { header: "Khối", key: "grade", width: 12 },
+      { header: "Điểm trường", key: "school", width: 28 },
+    ];
+    styleTemplateHeader(sheet.getRow(1));
+    sheet.addRows([
+      { name: "6A", grade: 6, school: schools[0]?.name || "Điểm A" },
+      { name: "6B", grade: 6, school: schools[0]?.name || "Điểm A" },
+      { name: "7A", grade: 7, school: schools[1]?.name || schools[0]?.name || "Điểm B" },
+    ]);
+    const saved = await saveWorkbookWithDialog(workbook, "Mau_Nhap_Lop.xlsx");
+    if (saved) toast.success("Đã lưu file mẫu lớp học");
+  };
+
+  const importClassesFromExcel = async () => {
+    try {
+      const workbook = await openWorkbookFromUser();
+      if (!workbook) return;
+
+      const sheet = workbook.worksheets[0];
+      if (!sheet) {
+        toast.error("File Excel không có sheet dữ liệu");
+        return;
+      }
+
+      const nextSchools: School[] = [...schools];
+      const nextClasses: SchoolClass[] = [...classes];
+      const schoolByName = new Map(nextSchools.map((s) => [normalizeLookup(s.name), s]));
+      const classNames = new Set(nextClasses.map((c) => normalizeLookup(c.name)));
+      let imported = 0;
+
+      sheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return;
+        const name = readCellText(row, 1);
+        const gradeValue = Number(readCellText(row, 2));
+        const schoolName = readCellText(row, 3) || schools[0]?.name || "Điểm trường";
+
+        if (!name || ![6, 7, 8, 9].includes(gradeValue)) return;
+        const normalizedClass = normalizeLookup(name);
+        if (classNames.has(normalizedClass)) return;
+
+        const normalizedSchool = normalizeLookup(schoolName);
+        let school = schoolByName.get(normalizedSchool);
+        if (!school) {
+          school = { id: rid(), name: schoolName };
+          nextSchools.push(school);
+          schoolByName.set(normalizedSchool, school);
+        }
+
+        nextClasses.push({
+          id: rid(),
+          name,
+          grade: gradeValue as 6 | 7 | 8 | 9,
+          schoolId: school.id,
+        });
+        classNames.add(normalizedClass);
+        imported += 1;
+      });
+
+      if (imported === 0) {
+        toast.warning("Không có lớp mới hợp lệ để nhập");
+        return;
+      }
+
+      useStore.setState({ schools: nextSchools, classes: nextClasses });
+      toast.success(`Đã nhập ${imported} lớp từ Excel`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Không thể nhập file Excel lớp học");
+    }
+  };
 
   return (
     <AppLayout>
@@ -99,7 +186,17 @@ function SchoolsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Thêm lớp mới</CardTitle>
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="text-base">Thêm lớp mới</CardTitle>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={downloadClassTemplate}>
+                  <Download className="mr-2 h-4 w-4" /> Mẫu Excel
+                </Button>
+                <Button variant="outline" size="sm" onClick={importClassesFromExcel}>
+                  <FileUp className="mr-2 h-4 w-4" /> Nhập Excel
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <div>

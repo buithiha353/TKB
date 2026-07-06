@@ -4,15 +4,19 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
+  useNavigate,
   HeadContent,
   Scripts,
-  redirect,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
-import { useAuthStore } from "@/lib/auth/store";
+import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { useStore } from "@/lib/timetable/store";
+import { useEffect } from "react";
+
+const isDesktopApp = import.meta.env.VITE_DESKTOP === "true";
 
 function NotFoundComponent() {
   return (
@@ -105,6 +109,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  if (isDesktopApp) {
+    return <>{children}</>;
+  }
+
   return (
     <html lang="en">
       <head>
@@ -120,11 +128,21 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const isActivated = useStore((s) => s.isActivated);
+  const routerState = useRouterState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If not activated and not already on the activate page, redirect
+    if (!isActivated && !routerState.location.pathname.startsWith("/activate")) {
+      navigate({ to: "/activate", replace: true });
+    }
+  }, [isActivated, routerState.location.pathname, navigate]);
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      {(!isActivated && !routerState.location.pathname.startsWith("/activate")) ? null : <Outlet />}
       <Toaster position="top-right" richColors />
     </QueryClientProvider>
   );

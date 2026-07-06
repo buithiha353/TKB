@@ -238,7 +238,7 @@ export const seedSubjects: Subject[] = [
   {
     id: "sub_lsdl",
     name: "Lịch sử và Địa lí",
-    shortName: "LS&ĐL",
+    shortName: "LSĐL",
     defaultPeriods: 3,
     canDouble: false,
   },

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "@/lib/auth/store";
 import { useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 const nav = [
   { to: "/", label: "Tổng quan", icon: Home },
@@ -28,6 +29,30 @@ const nav = [
 
 const isDesktopApp = import.meta.env.VITE_DESKTOP === "true";
 
+function NavigationLink({
+  to,
+  className,
+  children,
+}: {
+  to: (typeof nav)[number]["to"];
+  className: string;
+  children: ReactNode;
+}) {
+  if (isDesktopApp) {
+    return (
+      <a href={`#${to}`} className={className}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={to} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onboarded = useStore((s) => s.onboarded);
@@ -36,6 +61,30 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [wizardOpen, setWizardOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    if (isDesktopApp) {
+      import("@tauri-apps/plugin-updater").then(({ check }) => {
+        check().then(async (update) => {
+          if (update) {
+            toast('Có phiên bản mới!', {
+              description: `Phiên bản ${update.version} đã sẵn sàng. Bạn có muốn cập nhật ngay không?`,
+              action: {
+                label: 'Cập nhật',
+                onClick: async () => {
+                  toast.info('Đang tải bản cập nhật...');
+                  await update.downloadAndInstall();
+                  const { relaunch } = await import("@tauri-apps/plugin-process");
+                  await relaunch();
+                }
+              },
+              duration: 10000,
+            });
+          }
+        }).catch(err => console.error("Update check failed:", err));
+      });
+    }
+  }, []);
 
   useEffect(() => {
     // Đảm bảo chỉ mở wizard sau khi Zustand đã load xong localStorage
@@ -52,6 +101,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       }
     }
   }, [hydrated, onboarded, isAuthenticated, router]);
+
   return (
     <div className="min-h-screen bg-muted/30 print:bg-white">
       <SetupWizard open={wizardOpen} onClose={() => setWizardOpen(false)} />
@@ -73,7 +123,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
-                <Link
+                <NavigationLink
                   key={item.to}
                   to={item.to}
                   className={cn(
@@ -85,7 +135,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 >
                   <Icon className="h-4 w-4" />
                   {item.label}
-                </Link>
+                </NavigationLink>
               );
             })}
           </nav>
@@ -129,7 +179,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
-                <Link
+                <NavigationLink
                   key={item.to}
                   to={item.to}
                   className={cn(
@@ -139,7 +189,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 >
                   <Icon className="h-4 w-4" />
                   <span className="truncate">{item.label.split(" ")[0]}</span>
-                </Link>
+                </NavigationLink>
               );
             })}
           </nav>

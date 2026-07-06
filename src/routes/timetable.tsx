@@ -75,7 +75,7 @@ function TimetablePage() {
   const handleExportExcel = async () => {
     try {
       const { exportTimetableToExcel } = await import("@/lib/timetable/exportExcel");
-      await exportTimetableToExcel({
+      const saved = await exportTimetableToExcel({
         schools: store.schools,
         classes: store.classes,
         subjects: store.subjects,
@@ -83,7 +83,9 @@ function TimetablePage() {
         timetable: store.timetable,
         settings: store.settings,
       });
-      toast.success("Đã tải xuống file Excel!");
+      if (saved) {
+        toast.success("Đã lưu file Excel!");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Lỗi khi tạo file Excel");
@@ -225,6 +227,7 @@ function TimetablePage() {
           l.session === "PM",
       ).length;
       return {
+        id: a.id,
         subject: subjectMap.get(a.subjectId)!,
         teacher: teacherMap.get(a.teacherId),
         needMorning: a.morningPeriods || 0,
@@ -534,7 +537,7 @@ function TimetablePage() {
 
                 return (
                   <div
-                    key={r.subject.id}
+                    key={r.id}
                     className={cn(
                       "flex flex-col gap-1 rounded-md border p-2 text-sm",
                       !ok && "border-amber-400 bg-amber-50 dark:bg-amber-950/20",

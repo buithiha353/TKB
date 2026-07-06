@@ -217,7 +217,7 @@ function SettingsPage() {
             </p>
             <div className="flex flex-wrap gap-2">
               <Button onClick={doExport} variant="outline">
-                <Download className="mr-2 h-4 w-4" /> Xuất JSON
+                <Download className="mr-2 h-4 w-4" /> Lưu Cấu hình & TKB
               </Button>
               <Button
                 variant="outline"

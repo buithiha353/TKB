@@ -6,10 +6,37 @@ import { useStore } from "@/lib/timetable/store";
 import { generateSchedule } from "@/lib/timetable/scheduler";
 import { toast } from "sonner";
 import { BookOpen, Calendar, School, Users, Sparkles, GraduationCap } from "lucide-react";
+import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
 });
+
+const isDesktopApp = import.meta.env.VITE_DESKTOP === "true";
+
+function AppLink({
+  to,
+  className,
+  children,
+}: {
+  to: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  if (isDesktopApp) {
+    return (
+      <a href={`#${to}`} className={className}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={to} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 function Dashboard() {
   const { schools, classes, subjects, teachers, assignments, timetable, settings, setTimetable } =
@@ -111,10 +138,10 @@ function Dashboard() {
                 Sinh TKB tự động
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/timetable">
+                <AppLink to="/timetable">
                   <Calendar className="mr-2 h-4 w-4" />
                   Xem thời khóa biểu
-                </Link>
+                </AppLink>
               </Button>
             </div>
           </CardContent>
@@ -159,34 +186,34 @@ function Dashboard() {
           <CardContent className="space-y-2 text-sm text-muted-foreground">
             <p>
               1. Kiểm tra{" "}
-              <Link to="/schools" className="text-primary underline">
+              <AppLink to="/schools" className="text-primary underline">
                 điểm trường & lớp học
-              </Link>
+              </AppLink>
             </p>
             <p>
               2. Xem{" "}
-              <Link to="/subjects" className="text-primary underline">
+              <AppLink to="/subjects" className="text-primary underline">
                 môn học
-              </Link>{" "}
+              </AppLink>{" "}
               và số tiết/tuần
             </p>
             <p>
               3. Cập nhật{" "}
-              <Link to="/teachers" className="text-primary underline">
+              <AppLink to="/teachers" className="text-primary underline">
                 danh sách giáo viên
-              </Link>
+              </AppLink>
             </p>
             <p>
               4. Kiểm tra{" "}
-              <Link to="/assignments" className="text-primary underline">
+              <AppLink to="/assignments" className="text-primary underline">
                 phân công dạy
-              </Link>
+              </AppLink>
             </p>
             <p>
               5. Bấm "Sinh TKB tự động" và{" "}
-              <Link to="/timetable" className="text-primary underline">
+              <AppLink to="/timetable" className="text-primary underline">
                 tinh chỉnh
-              </Link>
+              </AppLink>
             </p>
           </CardContent>
         </Card>
